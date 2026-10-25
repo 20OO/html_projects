@@ -17,10 +17,7 @@
             --neon-secondary: #d946ef;
             --neon-accent: #facc15;
             --bg-dark: #050508;
-            --card-bg: rgba(17, 24, 39, 0.7);
-            --card-opacity: 0.85;
             --grain-opacity: 0.07;
-            --anim-speed: 1;
             --zoom-level: 1;
         }
 
@@ -47,7 +44,7 @@
             top: 0; left: 0; width: 100vw; height: 100vh;
             pointer-events: none;
             z-index: 45;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03));
             background-size: 100% 4px, 6px 100%;
         }
 
@@ -103,19 +100,21 @@
             100% { clip: rect(80px, 9999px, 5px, 0); }
         }
 
-        /* Screen Shake */
+        /* Screen Shake (Preserved Original + Heavy) */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, -1px, 0); }
+            20%, 80% { transform: translate3d(4px, 2px, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, -4px, 0); }
+            40%, 60% { transform: translate3d(6px, 4px, 0); }
+        }
         .shake-light { animation: shakeLight 0.3s infinite; }
-        .shake-heavy { animation: shakeHeavy 0.4s infinite; }
         @keyframes shakeLight {
             0%, 100% { transform: translate(0, 0); }
             25% { transform: translate(-2px, 2px); }
             75% { transform: translate(2px, -2px); }
-        }
-        @keyframes shakeHeavy {
-            10%, 90% { transform: translate3d(-4px, -2px, 0); }
-            20%, 80% { transform: translate3d(6px, 4px, 0); }
-            30%, 50%, 70% { transform: translate3d(-8px, -6px, 0); }
-            40%, 60% { transform: translate3d(8px, 6px, 0); }
         }
 
         /* Custom Scrollbar */
@@ -132,7 +131,6 @@
             transform: scale(1.15) rotate(5deg);
         }
 
-        /* Safe area zoom container */
         #viewport-wrapper {
             transform-origin: center top;
             transition: transform 0.4s ease;
@@ -159,7 +157,7 @@
         <div class="flex items-center space-x-3 text-xs tracking-widest text-cyan-400">
             <span id="rec-dot" class="w-3 h-3 rounded-full bg-red-600 animate-ping cursor-pointer" title="Easter Egg: Nhấp 5 lần vào đây!"></span>
             <span class="font-bold">REC</span>
-            <span class="hidden sm:inline text-gray-500 font-code">| 4K UHD 60FPS</span>
+            <span class="hidden sm:inline text-gray-500 font-code">| 4K UHD 60 FPS</span>
             <span id="active-theme-tag" class="hidden md:inline px-2 py-0.5 rounded text-[10px] bg-cyan-950/80 text-cyan-300 border border-cyan-800">CYBERPUNK</span>
         </div>
 
@@ -168,14 +166,15 @@
         </div>
 
         <div class="flex items-center space-x-2 md:space-x-4 text-xs">
-            <button id="film-icon-btn" onclick="SecretLab.triggerFilmIconClick()" class="text-purple-400 hover:text-purple-300 p-1.5 transition" title="Bộ sưu tập cuộn phim">
+            <button id="film-icon-btn" onclick="SecretLab.triggerFilmIconClick()" class="text-purple-400 hover:text-purple-300 p-1.5 transition flex items-center space-x-1" title="PROD. #2026-FUN // Bộ sưu tập cuộn phim">
                 <i class="fas fa-film text-sm"></i>
+                <span class="hidden sm:inline text-[10px]">PROD. #2026-FUN</span>
             </button>
             <button onclick="TerminalLab.toggle()" class="bg-gray-800 hover:bg-gray-700 text-green-400 px-2.5 py-1 rounded border border-green-500/40 font-code flex items-center space-x-1 transition" title="Mở Terminal (Phím tắt: ` hoặc ~)">
                 <i class="fas fa-terminal"></i>
                 <span class="hidden sm:inline">CLI</span>
             </button>
-            <button onclick="AudioLab.toggleSound()" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-800 transition flex items-center space-x-1" title="Bật/Tắt Âm Thanh">
+            <button id="sound-toggle" onclick="AudioLab.toggleSound()" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-800 transition flex items-center space-x-1" title="Bật/Tắt Âm Thanh">
                 <i class="fas fa-volume-up" id="sound-icon"></i>
                 <span id="sound-text" class="hidden sm:inline">Âm Thanh: Bật</span>
             </button>
@@ -224,7 +223,11 @@
         </div>
 
         <div class="flex items-center space-x-3 text-xs">
-            <span id="status-tag" class="text-cyan-400 animate-pulse font-code text-[11px] hidden lg:inline">
+            <div class="text-xs text-gray-500 hidden xl:flex items-center space-x-1">
+                <i class="fas fa-gamepad text-yellow-400"></i>
+                <span>Thử: <strong class="text-yellow-400 font-code">↑ ↑ ↓ ↓ ← → ← → B A</strong></span>
+            </div>
+            <span id="status-tag" class="text-cyan-400 animate-pulse font-code text-[11px] hidden md:inline">
                 [MODE: NORMAL CINEMA]
             </span>
             <button onclick="MascotLab.toggleVisibility()" class="text-gray-400 hover:text-white transition p-1" title="Ẩn/Hiện Linh Vật">
@@ -240,12 +243,12 @@
     <canvas id="fx-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-30"></canvas>
 
     <!-- 4 Corners Easter Egg Target Zones -->
-    <div id="corner-tl" class="fixed top-0 left-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0"></div>
-    <div id="corner-tr" class="fixed top-0 right-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0"></div>
-    <div id="corner-br" class="fixed bottom-0 right-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0"></div>
-    <div id="corner-bl" class="fixed bottom-0 left-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0"></div>
+    <div id="corner-tl" class="fixed top-0 left-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0" title="Góc Tây Bắc"></div>
+    <div id="corner-tr" class="fixed top-0 right-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0" title="Góc Đông Bắc"></div>
+    <div id="corner-br" class="fixed bottom-0 right-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0" title="Góc Đông Nam"></div>
+    <div id="corner-bl" class="fixed bottom-0 left-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0" title="Góc Tây Nam"></div>
 
-    <!-- MAIN WRAPPER WITH DYNAMIC ZOOM / SHAKE -->
+    <!-- MAIN VIEWPORT WRAPPER -->
     <div id="viewport-wrapper" class="w-full min-h-screen">
 
         <!-- ========================================== -->
@@ -275,21 +278,21 @@
                     <span>BỘ LỌC PHIM:</span>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="ThemeLab.setFilter('none')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-cyan-600 border border-gray-700 transition active:scale-95">Gốc</button>
-                    <button onclick="ThemeLab.setFilter('cyberpunk')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-fuchsia-600 border border-gray-700 transition active:scale-95 text-fuchsia-400">Cyberpunk</button>
-                    <button onclick="ThemeLab.setFilter('noir')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-gray-600 border border-gray-700 transition active:scale-95 text-gray-300">Noir B&W</button>
-                    <button onclick="ThemeLab.setFilter('retro80s')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-yellow-600 border border-gray-700 transition active:scale-95 text-yellow-400">Retro 80s</button>
-                    <button onclick="ThemeLab.setFilter('horror')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-red-600 border border-gray-700 transition active:scale-95 text-red-500">Horror Neon</button>
-                    <button onclick="ThemeLab.setFilter('disco')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gradient-to-r from-red-500 via-green-500 to-blue-500 font-bold hover:opacity-90 border border-gray-700 transition active:scale-95 text-white">Disco Party 🎉</button>
+                    <button onclick="setFilter('none')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-cyan-600 border border-gray-700 transition active:scale-95">Gốc</button>
+                    <button onclick="setFilter('cyberpunk')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-fuchsia-600 border border-gray-700 transition active:scale-95 text-fuchsia-400">Cyberpunk</button>
+                    <button onclick="setFilter('noir')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-gray-600 border border-gray-700 transition active:scale-95 text-gray-300">Noir B&W</button>
+                    <button onclick="setFilter('retro80s')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-yellow-600 border border-gray-700 transition active:scale-95 text-yellow-400">Retro 80s</button>
+                    <button onclick="setFilter('horror')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-red-600 border border-gray-700 transition active:scale-95 text-red-500">Horror Neon</button>
+                    <button onclick="setFilter('disco')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gradient-to-r from-red-500 via-green-500 to-blue-500 font-bold hover:opacity-90 border border-gray-700 transition active:scale-95 text-white">Disco Party 🎉</button>
                 </div>
             </div>
 
-            <!-- CARDS / MOVIE POSTERS SECTION WITH EASTER EGGS -->
+            <!-- CARDS / MOVIE POSTERS SECTION WITH PRESERVED EASTER EGGS -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl my-6">
                 
                 <!-- Poster Card 1 -->
                 <div id="poster-card-1"
-                     onclick="SecretLab.onCard1Click(this)" 
+                     onclick="playCardAudio(440); triggerCardEffect(this, 'Phát hiện mật mã bí ẩn! ⭐'); SecretLab.onCard1Click(this);" 
                      class="poster-card group relative bg-gray-900/60 rounded-2xl p-5 border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] cursor-pointer overflow-hidden backdrop-blur-sm">
                     <div class="absolute top-3 right-3 text-cyan-400 text-xs font-code">#EE-01</div>
                     <div class="card-icon w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-2xl mb-4 group-hover:rotate-12 transition-transform">
@@ -297,7 +300,7 @@
                     </div>
                     <h3 class="text-xl font-bold mb-2 text-cyan-300">Ninja Không Gian</h3>
                     <p class="text-xs text-gray-400 leading-relaxed mb-4">
-                        Nhấp vào đây để phát tín hiệu âm thanh Synthwave 8-bit. Nhấp liên tục 10 lần để tích tụ năng lượng bí mật!
+                        Nhấp vào đây để phát tín hiệu âm thanh Synthwave 8-bit. Nhấp liên tục để tích tụ năng lượng bí mật!
                     </p>
                     <div class="text-xs text-cyan-500 font-code font-bold flex items-center justify-between">
                         <span>GỢI Ý: Konami Code</span>
@@ -307,7 +310,7 @@
 
                 <!-- Poster Card 2 -->
                 <div id="poster-card-2"
-                     onclick="SecretLab.onCard2Click(this)" 
+                     onclick="playCardAudio(587); triggerCardEffect(this, 'Chuyển đổi thực tại! 🌌'); SecretLab.onCard2Click(this);" 
                      class="poster-card group relative bg-gray-900/60 rounded-2xl p-5 border border-fuchsia-500/30 hover:border-fuchsia-400 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(217,70,239,0.3)] cursor-pointer overflow-hidden backdrop-blur-sm">
                     <div class="absolute top-3 right-3 text-fuchsia-400 text-xs font-code">#EE-02</div>
                     <div class="card-icon w-12 h-12 rounded-xl bg-fuchsia-500/20 text-fuchsia-400 flex items-center justify-center text-2xl mb-4 group-hover:-rotate-12 transition-transform">
@@ -315,7 +318,7 @@
                     </div>
                     <h3 class="text-xl font-bold mb-2 text-fuchsia-300">Mèo Neon Cyber</h3>
                     <p class="text-xs text-gray-400 leading-relaxed mb-4">
-                        Chú mèo du hành thời gian qua các vũ trụ phim. Bấm 3 lần rồi vuốt ve linh vật ở góc phải để mở Chiều Không Gian Mèo!
+                        Chú mèo du hành thời gian qua các vũ trụ phim. Bấm vào để kích hoạt hiệu ứng chớp tắt thần bí.
                     </p>
                     <div class="text-xs text-fuchsia-500 font-code font-bold flex items-center justify-between">
                         <span>GỢI Ý: Bấm Tiêu Đề</span>
@@ -325,7 +328,7 @@
 
                 <!-- Poster Card 3 -->
                 <div id="poster-card-3"
-                     onclick="SecretLab.onCard3Click(this)"
+                     onclick="playCardAudio(659); triggerCardEffect(this, 'Chống Vũ Trụ Song Song! 🚀'); SecretLab.onCard3Click(this);"
                      oncontextmenu="SecretLab.onCard3ContextMenu(event)"
                      class="poster-card group relative bg-gray-900/60 rounded-2xl p-5 border border-yellow-500/30 hover:border-yellow-400 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(234,179,8,0.3)] cursor-pointer overflow-hidden backdrop-blur-sm">
                     <div class="absolute top-3 right-3 text-yellow-400 text-xs font-code">#EE-03</div>
@@ -334,33 +337,33 @@
                     </div>
                     <h3 class="text-xl font-bold mb-2 text-yellow-300">Cuộn Phim Báo Động</h3>
                     <p class="text-xs text-gray-400 leading-relaxed mb-4">
-                        Chứa dữ liệu chưa được công bố. Nhấp chuột phải để xem menu kịch bản bí mật, hoặc bấm nút đỏ bên dưới nếu dám!
+                        Chứa dữ liệu chưa được công bố. Bấm vào nút bên dưới nếu bạn đủ can đảm đối mặt với kịch bản!
                     </p>
                     <div class="text-xs text-yellow-500 font-code font-bold flex items-center justify-between">
-                        <span>GỢI Ý: Giữ Nút Đỏ 3 Giây</span>
+                        <span>GỢI Ý: Đừng Bấm Nút Đỏ</span>
                         <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
                     </div>
                 </div>
 
             </div>
 
-            <!-- DANGER REEL ACTION BUTTON (UPGRADED CINEMATIC GENERATOR) -->
+            <!-- DANGER REEL ACTION BUTTON (UPGRADED CINEMATIC GENERATOR + LONG PRESS SAFEGUARD) -->
             <div class="my-6 text-center">
                 <button id="danger-btn" 
                         onmousedown="SecretLab.startDangerHold()"
                         onmouseup="SecretLab.endDangerHold()"
                         ontouchstart="SecretLab.startDangerHold()"
                         ontouchend="SecretLab.endDangerHold()"
-                        onclick="CinematicGenerator.triggerRandomEvent()" 
+                        onclick="SecretLab.onDangerButtonClick()" 
                         class="relative group px-8 py-5 rounded-3xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white font-black text-lg md:text-xl shadow-[0_0_40px_rgba(225,29,72,0.6)] hover:shadow-[0_0_60px_rgba(225,29,72,0.9)] hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden">
                     <span class="relative z-10 flex items-center space-x-3">
                         <i class="fas fa-exclamation-triangle animate-bounce"></i>
                         <span id="danger-btn-text">DANGER REEL: ĐỪNG BẤM VÀO ĐÂY!</span>
                         <i class="fas fa-radiation animate-spin"></i>
                     </span>
-                    <div id="danger-progress-bar" class="absolute left-0 bottom-0 top-0 bg-yellow-400/40 w-0 transition-all duration-100"></div>
+                    <div id="danger-progress-bar" class="absolute left-0 bottom-0 top-0 bg-yellow-400/40 w-0 transition-all duration-75 pointer-events-none"></div>
                 </button>
-                <p class="text-[11px] text-gray-500 mt-2 font-code">Mẹo: Giữ chuột 3 giây để kích hoạt Reel Overdrive bí mật</p>
+                <p class="text-[11px] text-gray-500 mt-2 font-code">Gợi ý: Giữ chuột 3 giây để kích hoạt Reel Overdrive bí mật</p>
             </div>
 
             <!-- MINI-GAME SECTION PRESERVED ON CINEMA VIEW -->
@@ -368,18 +371,18 @@
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="text-sm font-bold text-cyan-400 flex items-center space-x-2">
                         <i class="fas fa-gamepad"></i>
-                        <span>MINI-GAME ARCADE: NÉ THIÊN THẠCH BẢO VỆ CUỘN PHIM</span>
+                        <span>MINI-GAME: NÉ THIÊN THẠCH BẢO VỆ CUỘN PHIM</span>
                     </h3>
                     <div class="text-xs font-code text-yellow-400">
-                        SCORE: <span id="game-score">0</span> | BEST: <span id="game-best-score">0</span>
+                        SCORE: <span id="game-score">0</span>
                     </div>
                 </div>
                 <div id="game-container" class="relative w-full h-48 bg-black/80 rounded-xl overflow-hidden border border-gray-800 cursor-crosshair flex items-center justify-center">
                     <canvas id="minigame-canvas" class="w-full h-full block"></canvas>
                     <div id="game-start-overlay" class="absolute inset-0 bg-black/75 flex flex-col items-center justify-center space-y-3 z-20">
-                        <p class="text-xs text-gray-300">Di chuyển chuột hoặc vuốt tay để cuộn phim né thiên thạch & nhặt reel vàng!</p>
-                        <button onclick="ArcadeLab.startAsteroidsGame()" class="px-5 py-2 text-xs font-bold rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black transition shadow-lg active:scale-95">
-                            BẮT ĐẦU CHƠI (ASTEROIDS)
+                        <p class="text-xs text-gray-300">Di chuyển chuột / vuốt tay để điều khiển cuộn phim né thiên thạch!</p>
+                        <button onclick="startMiniGame()" class="px-5 py-2 text-xs font-bold rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black transition shadow-lg active:scale-95">
+                            BẮT ĐẦU CHƠI
                         </button>
                     </div>
                 </div>
@@ -483,10 +486,10 @@
                     <input type="range" min="0.7" max="1.4" step="0.05" value="1.0" oninput="ChaosLab.setZoom(this.value)" class="w-full accent-green-500">
                 </div>
 
-                <!-- Chaos Card 8: Fun Extras (Big Head, Confetti, Invisibility) -->
+                <!-- Chaos Card 8: Fun Extras -->
                 <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 hover:border-cyan-500 transition">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-amber-400"><i class="fas fa-theater-masks"></i> Hiệu Ứng Vui Nhộn</span>
+                        <span class="text-xs font-bold text-amber-400"><i class="fas fa-theater-masks"></i> Hiệu Ứng Phụ</span>
                     </div>
                     <div class="grid grid-cols-2 gap-1.5 text-[10px]">
                         <button onclick="ChaosLab.toggleBigHead()" class="py-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded text-gray-200">Big Head</button>
@@ -639,7 +642,6 @@
                 <button onclick="ArcadeLab.switchGame('reaction')" id="game-btn-reaction" class="px-3 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800">5. Reaction Test</button>
             </div>
 
-            <!-- Arcade Container Display -->
             <div id="arcade-viewport" class="bg-gray-900/90 p-5 rounded-2xl border border-gray-800">
                 
                 <!-- GAME 1: Dodge Asteroids -->
@@ -665,7 +667,7 @@
                 <!-- GAME 2: Neon Pong -->
                 <div id="arcade-game-pong" class="arcade-subgame hidden">
                     <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold text-fuchsia-400">NEON PONG: Dùng chuột/ngón tay (hoặc phím W/S) để đỡ bóng</span>
+                        <span class="text-xs font-bold text-fuchsia-400">NEON PONG: Dùng chuột/ngón tay (hoặc phím W/S, ↑/↓) để đỡ bóng</span>
                         <div class="text-xs font-code text-fuchsia-400">
                             PLAYER: <span id="pong-score-p1">0</span> | AI: <span id="pong-score-ai">0</span>
                         </div>
@@ -705,7 +707,7 @@
                         <p class="text-xs text-gray-400">Xanh lá: Đúng số và vị trí. Vàng: Đúng số nhưng sai vị trí. 7 cơ hội.</p>
                         
                         <div class="flex justify-center gap-2 font-code text-2xl">
-                            <input type="text" id="cb-input" maxlength="4" placeholder="1234" class="w-36 text-center bg-black border-2 border-cyan-500 rounded-xl text-yellow-400 outline-none tracking-widest">
+                            <input type="text" id="cb-input" maxlength="4" placeholder="1234" onkeydown="if(event.key==='Enter') ArcadeLab.submitCodeGuess()" class="w-36 text-center bg-black border-2 border-cyan-500 rounded-xl text-yellow-400 outline-none tracking-widest">
                             <button onclick="ArcadeLab.submitCodeGuess()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-black font-bold text-xs rounded-xl">GIẢI MÃ</button>
                         </div>
 
@@ -751,7 +753,7 @@
 
             <!-- Documents List -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="archive-doc-list">
-                <!-- Dynamically rendered by ArchiveLab -->
+                <!-- Dynamically populated -->
             </div>
         </section>
 
@@ -779,14 +781,10 @@
             </div>
 
             <!-- Achievements View -->
-            <div id="vault-view-achievements" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Populated dynamically -->
-            </div>
+            <div id="vault-view-achievements" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
             <!-- Inventory View -->
-            <div id="vault-view-inventory" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Populated dynamically -->
-            </div>
+            <div id="vault-view-inventory" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
 
             <div class="text-center mt-10">
                 <button onclick="ProgressManager.confirmReset()" class="text-xs text-red-500 hover:text-red-400 underline font-code">
@@ -983,7 +981,7 @@
     <!-- ========================================== -->
     <div id="event-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl hidden flex-col items-center justify-center p-4">
         <div class="max-w-2xl w-full bg-gray-900 border border-red-500/50 rounded-2xl p-6 relative shadow-[0_0_80px_rgba(239,68,68,0.4)] flex flex-col items-center text-center">
-            <button onclick="CinematicGenerator.closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
                 <i class="fas fa-times"></i>
             </button>
             <div id="modal-content-area" class="w-full">
@@ -1017,7 +1015,7 @@
                 </div>
                 <div class="p-3 bg-gray-900 rounded-xl border border-gray-800">
                     <span class="text-yellow-400 font-bold block mb-1">EASTER EGG PROGRESS:</span>
-                    <div>Đã tìm thấy: <span id="dev-egg-count" class="text-yellow-300">0</span> / 15</div>
+                    <div>Đã tìm thấy: <span id="dev-egg-count" class="text-yellow-300">0</span> / 16</div>
                 </div>
             </div>
 
@@ -1043,7 +1041,7 @@
     <!-- ========================================== -->
     <script>
         /* ==================================================
-         * 1. AUDIO ENGINE (Web Audio API - Fully Synthesized)
+         * 1. AUDIO ENGINE (Web Audio API - Synthesized)
          * ================================================== */
         const AudioLab = (() => {
             let audioCtx = null;
@@ -1069,12 +1067,12 @@
                 const icon = document.getElementById('sound-icon');
                 const text = document.getElementById('sound-text');
                 if (soundEnabled) {
-                    icon.className = 'fas fa-volume-up';
-                    text.innerText = 'Âm Thanh: Bật';
+                    if (icon) icon.className = 'fas fa-volume-up';
+                    if (text) text.innerText = 'Âm Thanh: Bật';
                     App.showToast('Âm thanh đã BẬT 🔊');
                 } else {
-                    icon.className = 'fas fa-volume-mute';
-                    text.innerText = 'Âm Thanh: Tắt';
+                    if (icon) icon.className = 'fas fa-volume-mute';
+                    if (text) text.innerText = 'Âm Thanh: Tắt';
                     if (isAmbientPlaying) stopAmbient();
                     App.showToast('Âm thanh đã TẮT 🔇');
                 }
@@ -1096,7 +1094,7 @@
                     osc.start();
                     osc.stop(audioCtx.currentTime + duration);
                 } catch (e) {
-                    console.warn("Audio playTone failed:", e);
+                    console.warn("Audio playTone error:", e);
                 }
             }
 
@@ -1199,9 +1197,9 @@
                 ambientGain = audioCtx.createGain();
 
                 ambientOsc1.type = 'sine';
-                ambientOsc1.frequency.setValueAtTime(55, audioCtx.currentTime); // A1
+                ambientOsc1.frequency.setValueAtTime(55, audioCtx.currentTime);
                 ambientOsc2.type = 'sine';
-                ambientOsc2.frequency.setValueAtTime(55.8, audioCtx.currentTime); // Binaural beat
+                ambientOsc2.frequency.setValueAtTime(55.8, audioCtx.currentTime);
 
                 ambientGain.gain.setValueAtTime(0.04 * masterVolume, audioCtx.currentTime);
 
@@ -1234,6 +1232,19 @@
                 toggleAmbient, setMasterVolume
             };
         })();
+
+        // Original global function wrappers to preserve 100% backward compatibility
+        function initAudio() { AudioLab.init(); }
+        function toggleAudio() { AudioLab.toggleSound(); }
+        function playSound(freq, type = 'sine', duration = 0.2, volume = 0.1) {
+            AudioLab.playTone(freq, type, duration, volume);
+        }
+        function playCardAudio(freq) {
+            playSound(freq, 'sawtooth', 0.3, 0.15);
+            setTimeout(() => playSound(freq * 1.25, 'triangle', 0.2, 0.1), 100);
+        }
+        function playVictoryJingle() { AudioLab.playVictoryJingle(); }
+        function playAlarmSound() { AudioLab.playAlarmSound(); }
 
         /* ==================================================
          * 2. BACKGROUND & MATRIX CANVAS ENGINE
@@ -1283,7 +1294,6 @@
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     
                     particles.forEach(p => {
-                        // Apply Gravity Mode
                         if (grav === 'down') p.vy += 0.05 * speed;
                         else if (grav === 'up') p.vy -= 0.05 * speed;
                         else if (grav === 'center') {
@@ -1293,7 +1303,6 @@
                             p.vy += dy * 0.0001 * speed;
                         }
 
-                        // Apply Magnetic Cursor
                         if (magnet !== 'none' && mouse.x !== null) {
                             const dx = mouse.x - p.x;
                             const dy = mouse.y - p.y;
@@ -1307,12 +1316,9 @@
 
                         p.x += p.vx * speed;
                         p.y += p.vy * speed;
-
-                        // Friction when moving fast
                         p.vx *= 0.99;
                         p.vy *= 0.99;
 
-                        // Wrap edges
                         if (p.x < 0) p.x = canvas.width;
                         if (p.x > canvas.width) p.x = 0;
                         if (p.y < 0) p.y = canvas.height;
@@ -1418,7 +1424,7 @@
                     p.x += p.vx;
                     p.y += p.vy;
                     if (p.isConfetti) {
-                        p.vy += 0.15; // Gravity
+                        p.vy += 0.15;
                         p.rotation += 5;
                     }
                     p.alpha -= p.decay;
@@ -1442,6 +1448,15 @@
 
             return { createFirework, createConfettiBurst };
         })();
+
+        function createFirework(x, y) { FXEngine.createFirework(x, y); }
+        function triggerCardEffect(cardElement, message) {
+            showToast(message);
+            createFirework(
+                cardElement.getBoundingClientRect().left + 100,
+                cardElement.getBoundingClientRect().top + 50
+            );
+        }
 
         /* ==================================================
          * 4. CHAOS CONTROL CENTER MANAGER
@@ -1481,9 +1496,9 @@
 
             function setShake(level) {
                 const body = document.getElementById('main-body');
-                body.classList.remove('shake-light', 'shake-heavy');
+                body.classList.remove('shake', 'shake-light');
                 if (level === 'light') body.classList.add('shake-light');
-                else if (level === 'heavy') body.classList.add('shake-heavy');
+                else if (level === 'heavy') body.classList.add('shake');
                 AudioLab.playPresetSFX('explosion');
                 checkChaosCount();
             }
@@ -1524,10 +1539,10 @@
                 AudioLab.playPresetSFX('glitch');
                 const title = document.getElementById('main-title');
                 title.classList.add('is-glitching');
-                document.getElementById('main-body').classList.add('shake-heavy');
+                document.getElementById('main-body').classList.add('shake');
                 setTimeout(() => {
                     title.classList.remove('is-glitching');
-                    document.getElementById('main-body').classList.remove('shake-heavy');
+                    document.getElementById('main-body').classList.remove('shake');
                 }, 600);
                 App.showToast('Bẻ cong thực tại: Glitch Wave ⚡');
             }
@@ -1554,7 +1569,7 @@
                 document.getElementById('viewport-wrapper').style.transform = 'scale(1)';
                 document.getElementById('chaos-val-zoom').innerText = '1.0x';
                 const body = document.getElementById('main-body');
-                body.classList.remove('shake-light', 'shake-heavy', 'filter-inverted', 'filter-mirror', 'filter-bighead', 'filter-invisible-cards', 'filter-rainbow');
+                body.classList.remove('shake', 'shake-light', 'filter-inverted', 'filter-mirror', 'filter-bighead', 'filter-invisible-cards', 'filter-rainbow');
                 App.showToast('Đã khôi phục toàn bộ Chaos về mặc định 🔄');
             }
 
@@ -1592,10 +1607,10 @@
 
             function initSandbox() {
                 sbCanvas = document.getElementById('sandbox-canvas');
-                if (!sbCanvas) return;
+                if (!sbCanvas || !sbCanvas.parentElement) return;
                 sbCtx = sbCanvas.getContext('2d');
-                sbCanvas.width = sbCanvas.parentElement.clientWidth;
-                sbCanvas.height = sbCanvas.parentElement.clientHeight;
+                sbCanvas.width = sbCanvas.parentElement.clientWidth || 600;
+                sbCanvas.height = sbCanvas.parentElement.clientHeight || 320;
                 sbBalls = [];
                 spawnBalls(6);
 
@@ -1603,14 +1618,12 @@
                     const rect = sbCanvas.getBoundingClientRect();
                     const mx = e.clientX - rect.left;
                     const my = e.clientY - rect.top;
-                    // Check if clicked an existing ball
                     for (let b of sbBalls) {
                         if (Math.hypot(b.x - mx, b.y - my) < b.r) {
                             isDraggingBall = b;
                             return;
                         }
                     }
-                    // Spawn new ball
                     sbBalls.push({
                         x: mx, y: my, vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6,
                         r: Math.random() * 12 + 10,
@@ -1620,7 +1633,7 @@
                     AudioLab.playTone(350, 'sine', 0.08, 0.08);
                 };
 
-                window.onmousemove = (e) => {
+                window.addEventListener('mousemove', (e) => {
                     if (isDraggingBall && sbCanvas) {
                         const rect = sbCanvas.getBoundingClientRect();
                         isDraggingBall.x = e.clientX - rect.left;
@@ -1628,11 +1641,12 @@
                         isDraggingBall.vx = 0;
                         isDraggingBall.vy = 0;
                     }
-                };
+                });
 
-                window.onmouseup = () => { isDraggingBall = null; };
+                window.addEventListener('mouseup', () => { isDraggingBall = null; });
 
-                if (!sbAnim) runSandboxLoop();
+                if (sbAnim) cancelAnimationFrame(sbAnim);
+                runSandboxLoop();
             }
 
             function spawnBalls(n = 5) {
@@ -1655,9 +1669,7 @@
                 document.getElementById('toy-antigrav-btn').innerText = `Chống Trọng Lực: ${sbAntiGrav ? 'BẬT 🚀' : 'TẮT'}`;
             }
 
-            function clearSandbox() {
-                sbBalls = [];
-            }
+            function clearSandbox() { sbBalls = []; }
 
             function runSandboxLoop() {
                 if (!sbCanvas) return;
@@ -1670,7 +1682,6 @@
                         b.x += b.vx;
                         b.y += b.vy;
 
-                        // Wall collisions
                         if (b.x + b.r > sbCanvas.width) { b.x = sbCanvas.width - b.r; b.vx *= -b.bounce; }
                         if (b.x - b.r < 0) { b.x = b.r; b.vx *= -b.bounce; }
                         if (b.y + b.r > sbCanvas.height) { b.y = sbCanvas.height - b.r; b.vy *= -b.bounce; }
@@ -1694,18 +1705,17 @@
 
             function initPainter() {
                 ptCanvas = document.getElementById('painter-canvas');
-                if (!ptCanvas) return;
+                if (!ptCanvas || !ptCanvas.parentElement) return;
                 ptCtx = ptCanvas.getContext('2d');
-                ptCanvas.width = ptCanvas.parentElement.clientWidth;
-                ptCanvas.height = ptCanvas.parentElement.clientHeight;
+                ptCanvas.width = ptCanvas.parentElement.clientWidth || 600;
+                ptCanvas.height = ptCanvas.parentElement.clientHeight || 320;
 
                 ptCanvas.onmousedown = (e) => { isPainting = true; paint(e); };
-                window.onmouseup = () => { isPainting = false; };
+                window.addEventListener('mouseup', () => { isPainting = false; });
                 ptCanvas.onmousemove = paint;
 
-                // Touch support
                 ptCanvas.ontouchstart = (e) => { isPainting = true; paintTouch(e); };
-                window.ontouchend = () => { isPainting = false; };
+                window.addEventListener('touchend', () => { isPainting = false; });
                 ptCanvas.ontouchmove = paintTouch;
             }
 
@@ -1771,10 +1781,10 @@
 
             function initBlackHole() {
                 bhCanvas = document.getElementById('blackhole-canvas');
-                if (!bhCanvas) return;
+                if (!bhCanvas || !bhCanvas.parentElement) return;
                 bhCtx = bhCanvas.getContext('2d');
-                bhCanvas.width = bhCanvas.parentElement.clientWidth;
-                bhCanvas.height = bhCanvas.parentElement.clientHeight;
+                bhCanvas.width = bhCanvas.parentElement.clientWidth || 600;
+                bhCanvas.height = bhCanvas.parentElement.clientHeight || 320;
                 bhParticles = [];
                 for (let i = 0; i < 200; i++) {
                     bhParticles.push({
@@ -1795,7 +1805,8 @@
                     AudioLab.playPresetSFX('teleport');
                 };
 
-                if (!bhAnim) runBlackHoleLoop();
+                if (bhAnim) cancelAnimationFrame(bhAnim);
+                runBlackHoleLoop();
             }
 
             function setHoleType(t) {
@@ -1804,16 +1815,13 @@
                 document.getElementById('hole-type-repel').className = t === 'repel' ? 'px-3 py-1 bg-purple-700 text-white rounded' : 'px-3 py-1 bg-gray-800 text-gray-400 rounded';
             }
 
-            function clearHoles() {
-                bhHoles = [];
-            }
+            function clearHoles() { bhHoles = []; }
 
             function runBlackHoleLoop() {
                 if (!bhCanvas) return;
                 bhCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
                 bhCtx.fillRect(0, 0, bhCanvas.width, bhCanvas.height);
 
-                // Draw holes
                 for (let h of bhHoles) {
                     bhCtx.beginPath();
                     bhCtx.arc(h.x, h.y, h.r, 0, Math.PI * 2);
@@ -1824,7 +1832,6 @@
                     bhCtx.shadowBlur = 0;
                 }
 
-                // Update particles
                 for (let p of bhParticles) {
                     for (let h of bhHoles) {
                         const dx = h.x - p.x;
@@ -1921,6 +1928,7 @@
                 document.getElementById(`toy-panel-${toy}`).classList.remove('hidden');
                 document.getElementById(`subtoy-btn-${toy}`).className = 'px-4 py-1.5 text-xs rounded-xl bg-yellow-500/20 text-yellow-300 border border-yellow-500/50';
 
+                // Re-initialize immediately after parent is unhidden to fix canvas dimensions
                 if (toy === 'sandbox') initSandbox();
                 else if (toy === 'painter') initPainter();
                 else if (toy === 'blackhole') initBlackHole();
@@ -1932,7 +1940,8 @@
                 switchToy, spawnBalls, toggleAntiGravity, clearSandbox,
                 clearPainter, savePainting, setHoleType, clearHoles,
                 toggleMechanicalSwitch, spinFidgetSpinner, onSpringSlider,
-                releaseSpringSlider, openMysteryBox
+                releaseSpringSlider, openMysteryBox,
+                refreshActive: () => switchToy(activeToy)
             };
         })();
 
@@ -1940,6 +1949,8 @@
          * 6. ARCADE ENGINE (Asteroids, Pong, Memory, CodeBreaker, Reaction)
          * ================================================== */
         const ArcadeLab = (() => {
+            let activeGame = 'asteroids';
+
             // --- Game 1: Dodge Asteroids ---
             let astCanvas, astCtx, astLoopId = null, astRunning = false, astScore = 0;
             let astPlayer = { x: 50, y: 100, r: 14 };
@@ -1949,15 +1960,15 @@
                 const c1 = document.getElementById('minigame-canvas');
                 const c2 = document.getElementById('arc-dodge-canvas');
                 astCanvas = (App.currentTab === 'arcade') ? c2 : c1;
-                if (!astCanvas) return;
+                if (!astCanvas || !astCanvas.parentElement) return;
                 astCtx = astCanvas.getContext('2d');
-                astCanvas.width = astCanvas.parentElement.clientWidth;
-                astCanvas.height = astCanvas.parentElement.clientHeight;
+                astCanvas.width = astCanvas.parentElement.clientWidth || 600;
+                astCanvas.height = astCanvas.parentElement.clientHeight || 200;
                 astPlayer.x = 45;
                 astPlayer.y = astCanvas.height / 2;
 
                 const onMove = (clientY) => {
-                    if (!astRunning) return;
+                    if (!astRunning || !astCanvas) return;
                     const rect = astCanvas.getBoundingClientRect();
                     astPlayer.y = clientY - rect.top;
                 };
@@ -1971,8 +1982,10 @@
             function startAsteroidsGame() {
                 initAsteroidsCanvas();
                 if (astLoopId) cancelAnimationFrame(astLoopId);
-                document.getElementById('game-start-overlay').classList.add('hidden');
-                document.getElementById('arc-dodge-overlay').classList.add('hidden');
+                const o1 = document.getElementById('game-start-overlay');
+                const o2 = document.getElementById('arc-dodge-overlay');
+                if (o1) o1.classList.add('hidden');
+                if (o2) o2.classList.add('hidden');
                 astRunning = true;
                 astScore = 0;
                 astObstacles = [];
@@ -1983,10 +1996,9 @@
             }
 
             function astGameLoop() {
-                if (!astRunning) return;
+                if (!astRunning || !astCanvas) return;
                 astCtx.clearRect(0, 0, astCanvas.width, astCanvas.height);
 
-                // Draw Player Reel
                 astCtx.save();
                 astCtx.beginPath();
                 astCtx.arc(astPlayer.x, astPlayer.y, astPlayer.r, 0, Math.PI * 2);
@@ -1996,7 +2008,6 @@
                 astCtx.fill();
                 astCtx.restore();
 
-                // Spawn Obstacles
                 if (Math.random() < 0.05) {
                     astObstacles.push({
                         x: astCanvas.width + 20,
@@ -2006,7 +2017,6 @@
                     });
                 }
 
-                // Spawn Pickups
                 if (Math.random() < 0.015) {
                     astPickups.push({
                         x: astCanvas.width + 20,
@@ -2016,7 +2026,6 @@
                     });
                 }
 
-                // Update & Draw Pickups
                 for (let i = astPickups.length - 1; i >= 0; i--) {
                     const p = astPickups[i];
                     p.x -= p.speed;
@@ -2035,7 +2044,6 @@
                     }
                 }
 
-                // Update & Draw Obstacles
                 for (let i = astObstacles.length - 1; i >= 0; i--) {
                     const obs = astObstacles[i];
                     obs.x -= obs.speed;
@@ -2045,7 +2053,6 @@
                     astCtx.fillStyle = '#ef4444';
                     astCtx.fill();
 
-                    // Collision check
                     if (Math.hypot(astPlayer.x - obs.x, astPlayer.y - obs.y) < astPlayer.r + obs.r) {
                         endAsteroidsGame();
                         return;
@@ -2066,8 +2073,10 @@
                 if (astLoopId) cancelAnimationFrame(astLoopId);
                 AudioLab.playAlarmSound();
                 App.showToast(`Game Over! Điểm số: ${astScore} 💥`);
-                document.getElementById('game-start-overlay').classList.remove('hidden');
-                document.getElementById('arc-dodge-overlay').classList.remove('hidden');
+                const o1 = document.getElementById('game-start-overlay');
+                const o2 = document.getElementById('arc-dodge-overlay');
+                if (o1) o1.classList.remove('hidden');
+                if (o2) o2.classList.remove('hidden');
 
                 const best = Math.max(astScore, ProgressManager.data.asteroidBest || 0);
                 ProgressManager.data.asteroidBest = best;
@@ -2080,11 +2089,13 @@
             }
 
             function updateAsteroidScoreUI() {
-                document.getElementById('game-score').innerText = astScore;
-                document.getElementById('arc-dodge-score').innerText = astScore;
+                const s1 = document.getElementById('game-score');
+                const s2 = document.getElementById('arc-dodge-score');
+                if (s1) s1.innerText = astScore;
+                if (s2) s2.innerText = astScore;
                 const b = ProgressManager.data.asteroidBest || 0;
-                document.getElementById('game-best-score').innerText = b;
-                document.getElementById('arc-dodge-best').innerText = b;
+                const b2 = document.getElementById('arc-dodge-best');
+                if (b2) b2.innerText = b;
             }
 
             // --- Game 2: Neon Pong ---
@@ -2094,19 +2105,26 @@
 
             function initPong() {
                 pongCanvas = document.getElementById('pong-canvas');
-                if (!pongCanvas) return;
+                if (!pongCanvas || !pongCanvas.parentElement) return;
                 pongCtx = pongCanvas.getContext('2d');
-                pongCanvas.width = pongCanvas.parentElement.clientWidth;
-                pongCanvas.height = pongCanvas.parentElement.clientHeight;
+                pongCanvas.width = pongCanvas.parentElement.clientWidth || 600;
+                pongCanvas.height = pongCanvas.parentElement.clientHeight || 320;
 
-                pongCanvas.parentElement.onmousemove = (e) => {
+                const onPongMove = (clientY) => {
+                    if (!pongCanvas) return;
                     const rect = pongCanvas.getBoundingClientRect();
-                    p1Y = e.clientY - rect.top - 30;
+                    p1Y = Math.max(0, Math.min(pongCanvas.height - 60, clientY - rect.top - 30));
+                };
+
+                pongCanvas.parentElement.onmousemove = (e) => onPongMove(e.clientY);
+                pongCanvas.parentElement.ontouchmove = (e) => {
+                    if (e.touches[0]) onPongMove(e.touches[0].clientY);
                 };
             }
 
             function startPongGame() {
                 initPong();
+                if (pongLoopId) cancelAnimationFrame(pongLoopId);
                 document.getElementById('pong-overlay').classList.add('hidden');
                 p1Score = 0; aiScore = 0;
                 updatePongUI();
@@ -2123,35 +2141,31 @@
             }
 
             function pongLoop() {
-                if (!pongRunning) return;
+                if (!pongRunning || !pongCanvas) return;
                 pongCtx.clearRect(0, 0, pongCanvas.width, pongCanvas.height);
 
-                // AI tracking
                 if (aiY + 30 < ball.y) aiY += 3.2;
                 else aiY -= 3.2;
+                aiY = Math.max(0, Math.min(pongCanvas.height - 60, aiY));
 
                 ball.x += ball.vx;
                 ball.y += ball.vy;
 
-                // Bounce top/bottom
-                if (ball.y < 0 || ball.y > pongCanvas.height) {
+                if (ball.y < ball.r || ball.y > pongCanvas.height - ball.r) {
                     ball.vy *= -1;
                     AudioLab.playTone(400, 'square', 0.05, 0.05);
                 }
 
-                // Player paddle collision
                 if (ball.x < 30 && ball.y > p1Y && ball.y < p1Y + 60) {
                     ball.vx = Math.abs(ball.vx) * 1.05;
                     AudioLab.playTone(600, 'square', 0.05, 0.08);
                 }
 
-                // AI paddle collision
                 if (ball.x > pongCanvas.width - 30 && ball.y > aiY && ball.y < aiY + 60) {
                     ball.vx = -Math.abs(ball.vx) * 1.05;
                     AudioLab.playTone(550, 'square', 0.05, 0.08);
                 }
 
-                // Score check
                 if (ball.x < 0) {
                     aiScore++;
                     updatePongUI();
@@ -2164,14 +2178,12 @@
                     else resetPongBall();
                 }
 
-                // Draw paddles
                 pongCtx.fillStyle = '#00e5ff';
                 pongCtx.fillRect(15, p1Y, 10, 60);
 
                 pongCtx.fillStyle = '#d946ef';
                 pongCtx.fillRect(pongCanvas.width - 25, aiY, 10, 60);
 
-                // Draw ball
                 pongCtx.beginPath();
                 pongCtx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
                 pongCtx.fillStyle = '#ffffff';
@@ -2187,6 +2199,7 @@
 
             function endPong(isPlayerWin) {
                 pongRunning = false;
+                if (pongLoopId) cancelAnimationFrame(pongLoopId);
                 document.getElementById('pong-overlay').classList.remove('hidden');
                 if (isPlayerWin) {
                     AudioLab.playVictoryJingle();
@@ -2197,6 +2210,17 @@
                     App.showToast('AI đã thắng! Hãy thử lại 🤖');
                 }
             }
+
+            // Keyboard support for Pong
+            window.addEventListener('keydown', (e) => {
+                if (App.currentTab === 'arcade' && activeGame === 'pong' && pongCanvas) {
+                    if (e.key === 'w' || e.key === 'ArrowUp') {
+                        p1Y = Math.max(0, p1Y - 25);
+                    } else if (e.key === 's' || e.key === 'ArrowDown') {
+                        p1Y = Math.min(pongCanvas.height - 60, p1Y + 25);
+                    }
+                }
+            });
 
             // --- Game 3: Memory Glitch ---
             let memCards = ['🎬', '🚀', '🤖', '🐱', '🍿', '👾', '⚡', '🔮'];
@@ -2247,13 +2271,12 @@
                             App.showToast('Tuyệt vời! Bạn đã phá đảo Memory Glitch! 🎉');
                         }
                     } else {
-                        // Glitch mismatch
                         AudioLab.playPresetSFX('glitch');
                         setTimeout(() => {
-                            document.getElementById(`mem-card-${c1.id}`).innerText = '❓';
-                            document.getElementById(`mem-card-${c2.id}`).innerText = '❓';
-                            document.getElementById(`mem-card-${c1.id}`).classList.remove('bg-cyan-950', 'border-cyan-500');
-                            document.getElementById(`mem-card-${c2.id}`).classList.remove('bg-cyan-950', 'border-cyan-500');
+                            const e1 = document.getElementById(`mem-card-${c1.id}`);
+                            const e2 = document.getElementById(`mem-card-${c2.id}`);
+                            if (e1) { e1.innerText = '❓'; e1.classList.remove('bg-cyan-950', 'border-cyan-500'); }
+                            if (e2) { e2.innerText = '❓'; e2.classList.remove('bg-cyan-950', 'border-cyan-500'); }
                             memFlipped = [];
                         }, 700);
                     }
@@ -2272,8 +2295,9 @@
             }
 
             function submitCodeGuess() {
-                const guess = document.getElementById('cb-input').value.trim();
-                if (guess.length !== 4) {
+                const inputEl = document.getElementById('cb-input');
+                const guess = inputEl.value.trim();
+                if (guess.length !== 4 || !/^\d{4}$/.test(guess)) {
                     App.showToast('Vui lòng nhập đúng 4 chữ số!');
                     return;
                 }
@@ -2300,7 +2324,7 @@
                 } else {
                     AudioLab.playTone(350, 'triangle', 0.1, 0.1);
                 }
-                document.getElementById('cb-input').value = '';
+                inputEl.value = '';
             }
 
             // --- Game 5: Reaction Test ---
@@ -2313,6 +2337,7 @@
                 document.getElementById('reaction-title').innerText = 'CHỜ TÍN HIỆU ĐỔI MÀU...';
                 document.getElementById('reaction-icon').className = 'fas fa-bolt text-4xl mb-3 text-red-400';
                 
+                clearTimeout(reactionTimeout);
                 const delay = Math.random() * 2500 + 1500;
                 reactionTimeout = setTimeout(() => {
                     reactionState = 'ready';
@@ -2352,6 +2377,7 @@
             }
 
             function switchGame(g) {
+                activeGame = g;
                 document.querySelectorAll('.arcade-subgame').forEach(el => el.classList.add('hidden'));
                 document.querySelectorAll('[id^="game-btn-"]').forEach(el => {
                     el.className = 'px-3 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800';
@@ -2370,9 +2396,13 @@
             return {
                 startAsteroidsGame, switchGame, startPongGame,
                 initMemoryGame, submitCodeGuess, initCodeBreaker,
-                handleReactionClick
+                handleReactionClick, initAsteroidsCanvas,
+                get activeGame() { return activeGame; }
             };
         })();
+
+        // Global startMiniGame to preserve original click handler
+        function startMiniGame() { ArcadeLab.startAsteroidsGame(); }
 
         /* ==================================================
          * 7. SECRET TERMINAL ENGINE (80s CRT CLI)
@@ -2476,29 +2506,18 @@
                 }
             });
 
-            // Shortcut backtick
-            window.addEventListener('keydown', (e) => {
-                if (e.key === '`' || e.key === '~') {
-                    toggle();
-                } else if (e.key === 'Escape') {
-                    if (isOpen) toggle();
-                    CinematicGenerator.closeModal();
-                    DevLab.close();
-                }
-            });
-
             return { toggle, isOpen: () => isOpen };
         })();
 
         /* ==================================================
-         * 8. EASTER EGG HUNT 2.0 (15+ Working Secrets)
+         * 8. EASTER EGG HUNT 2.0 (16 Tracked Secrets)
          * ================================================== */
         const SecretLab = (() => {
             let card1Clicks = 0, card2Clicks = 0;
-            let dangerHoldTimer = null;
+            let dangerHoldStart = 0, dangerLongPressed = false, holdProgressInterval = null;
             let recClicks = 0;
-            let cornerSequence = [];
-            let cornerTimer = null;
+            let cornerSequence = [], cornerTimer = null;
+            let posterHistory = [], posterTimer = null;
 
             // 1. Konami Code Listener
             const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
@@ -2506,6 +2525,8 @@
 
             window.addEventListener('keydown', (e) => {
                 if (TerminalLab.isOpen()) return;
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
                 const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
                 if (k === konamiCode[konamiIdx].toLowerCase()) {
                     konamiIdx++;
@@ -2528,6 +2549,9 @@
                     setTimeout(() => FXEngine.createFirework(Math.random() * window.innerWidth, window.innerHeight * 0.4), i * 200);
                 }
                 ThemeLab.setFilter('disco');
+                setTimeout(() => {
+                    document.getElementById('main-body').classList.remove('filter-disco');
+                }, 8000);
             }
 
             // 2. Title 5-Clicks Matrix
@@ -2548,11 +2572,22 @@
                 }
             });
 
-            // 3. Ninja Poster 10 Clicks Surge
+            // Poster Sequence Tracking (Combo 1 -> 3 -> 2)
+            function recordPoster(num) {
+                posterHistory.push(num);
+                clearTimeout(posterTimer);
+                posterTimer = setTimeout(() => { posterHistory = []; }, 4000);
+                if (posterHistory.slice(-3).join('') === '132') {
+                    unlockEgg('poster_combo', 'Bộ Ba Tam Giác Điện Ảnh');
+                    App.showToast('COMBO POSTER 1 -> 3 -> 2 HOÀN HẢO! 🔺');
+                    AudioLab.playVictoryJingle();
+                }
+            }
+
+            // 3. Ninja Poster
             function onCard1Click(el) {
+                recordPoster(1);
                 card1Clicks++;
-                AudioLab.playTone(440 + card1Clicks * 30, 'sawtooth', 0.15, 0.1);
-                FXEngine.createFirework(el.getBoundingClientRect().left + 80, el.getBoundingClientRect().top + 50, 15);
                 if (card1Clicks >= 10) {
                     card1Clicks = 0;
                     unlockEgg('ninja_surge', 'Năng Lượng Ninja Tối Thượng');
@@ -2561,11 +2596,10 @@
                 }
             }
 
-            // 4. Cat Dimension Sequence
+            // 4. Cat Dimension
             function onCard2Click(el) {
+                recordPoster(2);
                 card2Clicks++;
-                AudioLab.playTone(587, 'triangle', 0.2, 0.1);
-                FXEngine.createFirework(el.getBoundingClientRect().left + 80, el.getBoundingClientRect().top + 50, 15);
                 if (card2Clicks === 3) {
                     App.showToast('Đã tích lũy 3 lần bấm Mèo! Giờ hãy bấm vào Linh Vật ở góc phải!');
                 }
@@ -2578,23 +2612,47 @@
                 AudioLab.playVictoryJingle();
             }
 
-            // 5. Danger Reel Long-Press (3s)
+            // 5. Danger Reel Long-Press (3s) with clean click separation
             function startDangerHold() {
-                dangerHoldTimer = setTimeout(() => {
-                    unlockEgg('danger_longpress', 'Reel Overdrive');
-                    App.showToast('BẠN ĐÃ GIỮ ĐỦ 3 GIÂY: KÍCH HOẠT OVERDRIVE! 💥');
-                    AudioLab.playPresetSFX('explosion');
-                }, 3000);
+                dangerHoldStart = Date.now();
+                dangerLongPressed = false;
+                const bar = document.getElementById('danger-progress-bar');
+                if (bar) bar.style.width = '0%';
+
+                clearInterval(holdProgressInterval);
+                holdProgressInterval = setInterval(() => {
+                    const elapsed = Date.now() - dangerHoldStart;
+                    const pct = Math.min(100, (elapsed / 3000) * 100);
+                    if (bar) bar.style.width = `${pct}%`;
+
+                    if (elapsed >= 3000) {
+                        clearInterval(holdProgressInterval);
+                        dangerLongPressed = true;
+                        if (bar) bar.style.width = '0%';
+                        unlockEgg('danger_longpress', 'Reel Overdrive');
+                        App.showToast('BẠN ĐÃ GIỮ ĐỦ 3 GIÂY: KÍCH HOẠT OVERDRIVE! 💥');
+                        AudioLab.playPresetSFX('explosion');
+                        ChaosLab.triggerGlitchPulse();
+                    }
+                }, 50);
             }
+
             function endDangerHold() {
-                clearTimeout(dangerHoldTimer);
+                clearInterval(holdProgressInterval);
+                const bar = document.getElementById('danger-progress-bar');
+                if (bar) bar.style.width = '0%';
+            }
+
+            function onDangerButtonClick() {
+                if (dangerLongPressed) {
+                    dangerLongPressed = false;
+                    return; // Ignore regular click if held for >=3s
+                }
+                startCinematicEvent();
             }
 
             // 6. Right Click on Card 3
-            function onCard3Click(el) {
-                AudioLab.playTone(659, 'sine', 0.2, 0.1);
-                FXEngine.createFirework(el.getBoundingClientRect().left + 80, el.getBoundingClientRect().top + 50, 15);
-            }
+            function onCard3Click(el) { recordPoster(3); }
             function onCard3ContextMenu(e) {
                 e.preventDefault();
                 unlockEgg('right_click_reel', 'Kịch Bản Cấm Sau Hậu Trường');
@@ -2629,7 +2687,9 @@
             // 9. 4-Corners Clockwise Sequence (TL -> TR -> BR -> BL)
             function setupCorners() {
                 const addCorner = (id, step) => {
-                    document.getElementById(id).addEventListener('click', () => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    el.addEventListener('click', () => {
                         cornerSequence.push(step);
                         AudioLab.playTone(300 + step * 100, 'sine', 0.1, 0.1);
                         clearTimeout(cornerTimer);
@@ -2650,7 +2710,55 @@
             }
             setupCorners();
 
-            // Tracking and Persistence
+            // 10. Circular Mouse Swirl (720 degrees)
+            let lastAngle = null, totalRotated = 0, lastMoveTime = Date.now();
+            window.addEventListener('mousemove', (e) => {
+                const cx = window.innerWidth / 2;
+                const cy = window.innerHeight / 2;
+                const angle = Math.atan2(e.clientY - cy, e.clientX - cx);
+                const now = Date.now();
+                if (now - lastMoveTime > 1500) {
+                    totalRotated = 0;
+                    lastAngle = null;
+                }
+                lastMoveTime = now;
+
+                if (lastAngle !== null) {
+                    let diff = angle - lastAngle;
+                    if (diff > Math.PI) diff -= Math.PI * 2;
+                    if (diff < -Math.PI) diff += Math.PI * 2;
+                    totalRotated += diff;
+
+                    if (Math.abs(totalRotated) > Math.PI * 4) {
+                        totalRotated = 0;
+                        unlockEgg('circle_mouse', 'Vũ Điệu Lốc Xoáy Vũ Trụ');
+                        FXEngine.createFirework(cx, cy, 70);
+                        App.showToast('BẠN ĐÃ TẠO XOÁY NĂNG LƯỢNG 720 ĐỘ! 🌀');
+                        AudioLab.playPresetSFX('teleport');
+                    }
+                }
+                lastAngle = angle;
+            });
+
+            // 11. Type "RETRO" anywhere
+            let typedBuffer = '';
+            window.addEventListener('keydown', (e) => {
+                if (TerminalLab.isOpen()) return;
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                typedBuffer = (typedBuffer + e.key.toLowerCase()).slice(-5);
+                if (typedBuffer === 'retro') {
+                    unlockEgg('retro_type', 'Mật Mã Thập Niên 80');
+                    ThemeLab.applyPreset('synthwave');
+                    App.showToast('GIAO THỨC RETRO 80S ĐÃ ĐƯỢC GÕ! 📼');
+                }
+            });
+
+            // 12. Secret Glyph Button after Danger Reel
+            function onSecretGlyphClick() {
+                unlockEgg('secret_button_appear', 'Thợ Săn Kỳ Dị (Curious Cat)');
+                App.showToast('Bạn đã phát hiện nút ấn bí mật sau thảm họa! 👁️');
+            }
+
             function unlockEgg(id, name) {
                 if (!ProgressManager.data.secrets.includes(id)) {
                     ProgressManager.data.secrets.push(id);
@@ -2667,8 +2775,9 @@
 
             return {
                 onCard1Click, onCard2Click, onCard3Click, onCard3ContextMenu,
-                startDangerHold, endDangerHold, triggerFilmIconClick,
-                activateCatDimension, unlockEgg
+                startDangerHold, endDangerHold, onDangerButtonClick,
+                triggerFilmIconClick, activateCatDimension, unlockEgg,
+                onSecretGlyphClick
             };
         })();
 
@@ -2679,9 +2788,9 @@
             const documents = [
                 { id: 'DOC-001', title: 'Sự Cố Trạm Không Gian Cine-9', status: 'unlocked', content: 'Ngày 14 tháng 10 năm 2026: Một cuộn phim thử nghiệm bị nhiễm bức xạ lượng tử phát tán tín hiệu glitch khắp mạng lưới studio Cine-Mania.' },
                 { id: 'DOC-002', title: 'Hồ Sơ Mèo Lượng Tử Không Gian', status: 'unlocked', content: 'Đối tượng: Mèo Cyber Neon. Khả năng dịch chuyển giữa các chiều không gian phim noir, cyberpunk và hoạt hình 80s. Được quan sát thấy thường xuyên xuất hiện ở góc phải màn hình.' },
-                { id: 'DOC-003', title: 'Nhật Ký Kỹ Sư 00 (Mã Hóa)', status: 'encrypted', cipherText: 'Q0lORS1NQU5JQS AzMDAwIGxhIG1vdCB0cm8gY2hvaSB2byB0YW4h', content: 'Bản dịch: "CINE-MANIA 3000 là một trò chơi vô tận! Đừng để cuộn phim báo động phát nổ trước khi bạn giải mã hết bí mật."' },
+                { id: 'DOC-003', title: 'Nhật Ký Kỹ Sư 00 (Mã Hóa Base64)', status: 'encrypted', cipherText: 'Q0lORS1NQU5JQS AzMDAwIGxhIG1vdCB0cm8gY2hvaSB2byB0YW4h', content: 'Bản dịch: "CINE-MANIA 3000 là một trò chơi vô tận! Đừng để cuộn phim báo động phát nổ trước khi bạn giải mã hết bí mật."' },
                 { id: 'DOC-004', title: 'Bí Mật Cuộn Phim Tự Hủy', status: 'unlocked', content: 'Kịch bản Danger Reel thực chất là một chuỗi kiểm tra tâm lý khán giả: Ai càng tò mò càng dễ nhấn vào nút đỏ!' },
-                { id: 'DOC-005', title: 'Thông Điệp Phá Vỡ Bức Tường Thứ Tư', status: 'unlocked', content: 'Chào bạn, người đang ngồi trước màn hình! Chúng tôi biết bạn đã rê chuột qua lại ít nhất 20 lần và vừa thử nhấn vào nút đỏ. Hãy tiếp tục khám phá!' },
+                { id: 'DOC-005', title: 'Thông Điệp Phá Vỡ Bức Tường Thứ Tư', status: 'unlocked', content: 'Chào bạn, người đang ngồi trước màn hình! Chúng tôi biết bạn đã rê chuột qua lại nhiều lần và vừa bấm thử vào nút đỏ. Hãy tiếp tục khám phá!' },
                 { id: 'DOC-006', title: 'Giao Thức Ma Trận Điên Rồ', status: 'unlocked', content: 'Khi tiêu đề chính bị nhấn liên tục 5 lần, tần số quét của trang web sẽ đồng bộ với mưa mã nhị phân màu xanh lá cây của Cine-OS.' },
                 { id: 'DOC-007', title: 'Kịch Bản Phim Chưa Từng Chiếu', status: 'unlocked', content: 'Cảnh 1: Ninja Không Gian gặp Mèo Neon trên nóc tàu điện ngầm Cyberpunk. Ninja rút kiếm ánh sáng, Mèo nhả ra cuộn phim báo động. Hết phim.' },
                 { id: 'DOC-008', title: 'Chìa Khóa Phòng Nhà Phát Triển', status: 'unlocked', content: 'Bí mật nằm ở biểu tượng chìa khóa góc trên hoặc lệnh devroom trong Secret Terminal CLI.' }
@@ -2689,6 +2798,7 @@
 
             function render() {
                 const list = document.getElementById('archive-doc-list');
+                if (!list) return;
                 list.innerHTML = '';
                 let count = 0;
 
@@ -2724,7 +2834,8 @@
                     list.appendChild(card);
                 });
 
-                document.getElementById('archive-unlocked-count').innerText = count;
+                const countEl = document.getElementById('archive-unlocked-count');
+                if (countEl) countEl.innerText = count;
             }
 
             function decryptDoc(id) {
@@ -2777,7 +2888,7 @@
                         data = Object.assign(data, JSON.parse(raw));
                     }
                 } catch (e) {
-                    console.warn("Storage load error:", e);
+                    console.warn("Storage load warning (using in-memory):", e);
                 }
             }
 
@@ -2785,7 +2896,7 @@
                 try {
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
                 } catch (e) {
-                    console.warn("Storage save error:", e);
+                    console.warn("Storage save warning:", e);
                 }
             }
 
@@ -2819,8 +2930,8 @@
             }
 
             function renderVault() {
-                // Render Achievements
                 const achContainer = document.getElementById('vault-view-achievements');
+                if (!achContainer) return;
                 achContainer.innerHTML = '';
                 allAchievements.forEach(a => {
                     const isUnlocked = data.achievements.includes(a.id);
@@ -2839,8 +2950,8 @@
                 });
                 document.getElementById('vault-ach-count').innerText = `${data.achievements.length}/${allAchievements.length}`;
 
-                // Render Inventory
                 const invContainer = document.getElementById('vault-view-inventory');
+                if (!invContainer) return;
                 invContainer.innerHTML = '';
                 if (data.inventory.length === 0) {
                     invContainer.innerHTML = '<p class="col-span-full text-xs text-gray-500 text-center py-6">Chưa có vật phẩm nào trong kho. Hãy tiếp tục săn tìm Easter eggs!</p>';
@@ -2863,7 +2974,7 @@
 
             function confirmReset() {
                 if (confirm('Bạn có chắc chắn muốn đặt lại toàn bộ thành tựu và bí mật đã tìm thấy không?')) {
-                    localStorage.removeItem(STORAGE_KEY);
+                    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
                     location.reload();
                 }
             }
@@ -2893,7 +3004,8 @@
                 "Nghe đồn có một căn phòng bí mật của Nhà Phát Triển...",
                 "Meo meo! Tôi có thể cảm nhận các hạt lượng tử đang xoay quanh con trỏ chuột.",
                 "Thử nhấp 4 góc màn hình theo chiều kim đồng hồ xem điều gì xảy ra!",
-                "Bản nhạc nền Synthwave này làm tôi muốn nhảy nhót quá đi thôi!"
+                "Thử gõ cụm từ 'retro' trên bàn phím xem màn hình sẽ đổi màu ra sao!",
+                "Nhấp chuột phải vào Cuộn Phim Báo Động để xem kịch bản hậu trường!"
             ];
 
             function onClick() {
@@ -2909,6 +3021,7 @@
             }
 
             function say(text) {
+                if (!speech) return;
                 speech.innerText = text;
                 speech.classList.remove('hidden');
                 clearTimeout(speechTimer);
@@ -2935,58 +3048,44 @@
             function triggerRandomEvent() {
                 ProgressManager.unlockAchievement('danger_survivor');
                 AudioLab.playAlarmSound();
-                document.getElementById('main-body').classList.add('shake-heavy');
+                document.body.classList.add('shake');
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
 
                 const eventId = Math.floor(Math.random() * 8);
 
                 switch (eventId) {
-                    case 0: // Original Trap Countdown
-                        eventMeltdown();
-                        break;
-                    case 1: // Meteor Barrage
-                        eventMeteorBarrage();
-                        break;
-                    case 2: // Cyber Glitch Hack
-                        eventGlitchHack();
-                        break;
-                    case 3: // Jackpot Token Win
-                        eventJackpot();
-                        break;
-                    case 4: // Time Anomaly
-                        eventTimeReverse();
-                        break;
-                    case 5: // Cat Takeover
-                        eventCatTakeover();
-                        break;
-                    case 6: // Horror Neon Anomaly
-                        eventHorrorBroadcast();
-                        break;
-                    default:
-                        eventMeltdown();
-                        break;
+                    case 0: eventMeltdown(); break;
+                    case 1: eventMeteorBarrage(); break;
+                    case 2: eventGlitchHack(); break;
+                    case 3: eventJackpot(); break;
+                    case 4: eventTimeReverse(); break;
+                    case 5: eventCatTakeover(); break;
+                    case 6: eventHorrorBroadcast(); break;
+                    default: eventMeltdown(); break;
                 }
             }
 
             function eventMeltdown() {
-                let countdown = 4;
+                let countdown = 5;
                 content.innerHTML = `
                     <div class="space-y-4">
                         <div class="text-red-500 text-5xl animate-ping my-4"><i class="fas fa-biohazard"></i></div>
-                        <h2 class="text-2xl font-black text-red-500 uppercase tracking-widest">CẢNH BÁO TỰ HỦY REEL!</h2>
-                        <div class="text-6xl font-black font-code text-yellow-400 my-4" id="modal-timer">04</div>
-                        <p class="text-xs text-gray-400 font-code">Tiến trình thanh trừng cuộn phim bí mật đang diễn ra...</p>
+                        <h2 class="text-2xl font-black text-red-500 uppercase tracking-widest">CẢNH BÁO HỆ THỐNG PHÁT NỔ!</h2>
+                        <p class="text-sm text-gray-300">Bạn đã tự tay kích hoạt tiến trình tự hủy cuộn phim bí mật!</p>
+                        <div class="text-6xl font-black font-code text-yellow-400 my-4" id="modal-timer">05</div>
+                        <p class="text-xs text-gray-500 font-code">Đang tải ASCII Art hoạt hình...</p>
                     </div>
                 `;
                 const timer = setInterval(() => {
                     countdown--;
                     if (countdown > 0) {
-                        document.getElementById('modal-timer').innerText = `0${countdown}`;
+                        const t = document.getElementById('modal-timer');
+                        if (t) t.innerText = `0${countdown}`;
                         AudioLab.playAlarmSound();
                     } else {
                         clearInterval(timer);
-                        document.getElementById('main-body').classList.remove('shake-heavy');
+                        document.body.classList.remove('shake');
                         showAsciiCatTrap();
                     }
                 }, 1000);
@@ -2998,6 +3097,7 @@
                 content.innerHTML = `
                     <div class="space-y-4">
                         <h2 class="text-xl font-bold text-cyan-400">🎉 BẠN ĐÃ BỊ LỪA! (IT'S A TRAP) 🎉</h2>
+                        <p class="text-xs text-gray-300">Không có vụ nổ nào cả, chỉ có chiếu phim ASCII siêu đáng yêu!</p>
                         <pre class="font-code text-xs text-green-400 bg-black/90 p-4 rounded-xl border border-green-800 leading-none overflow-x-auto text-left mx-auto max-w-sm">
       /\\_/\\  
      ( o.o )  &lt;-- "Cuộn phim vẫn an toàn!"
@@ -3008,9 +3108,14 @@
     \\   /  \\   /  \\   /  \\   /  \\   /
      o-o    o-o    o-o    o-o    o-o
                         </pre>
-                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs transition">
-                            Đóng & Tiếp Tục Thám Hiểm
-                        </button>
+                        <div class="flex flex-col items-center gap-2">
+                            <button onclick="closeModal()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-bold text-xs hover:opacity-90 transition">
+                                Đóng Thước Phim & Tiếp Tục Khám Phá
+                            </button>
+                            <button id="secret-glyph" onclick="SecretLab.onSecretGlyphClick()" class="text-cyan-400 hover:text-yellow-400 animate-pulse text-xs font-code mt-2 p-1" title="Nhấp vào cổ ngữ bí ẩn">
+                                <i class="fas fa-eye"></i> [Bí Ẩn: ☿ Cổ Ngữ Của Người Xem Phim]
+                            </button>
+                        </div>
                     </div>
                 `;
             }
@@ -3021,7 +3126,7 @@
                         <i class="fas fa-meteor text-5xl text-orange-400 animate-spin"></i>
                         <h2 class="text-2xl font-bold text-orange-400">CƠN BÃO THIÊN THẠCH LƯỢNG TỬ!</h2>
                         <p class="text-xs text-gray-300">50 thiên thạch vũ trụ vừa quét qua toàn bộ màn hình của bạn.</p>
-                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-orange-500 text-black font-bold text-xs rounded-xl">Thu Dọn Mảnh Vỡ</button>
+                        <button onclick="closeModal()" class="px-6 py-2 bg-orange-500 text-black font-bold text-xs rounded-xl">Thu Dọn Mảnh Vỡ</button>
                     </div>
                 `;
                 for (let i = 0; i < 6; i++) {
@@ -3036,7 +3141,7 @@
                         <i class="fas fa-terminal text-5xl text-green-400"></i>
                         <h2 class="text-xl font-bold text-green-400">TÍN HIỆU PHÁT THANH BỊ CHẶN BỞI HACKER!</h2>
                         <p class="text-xs text-gray-300 font-code">"Mật mã mở khóa Terminal: Hãy thử gõ <strong class='text-yellow-400'>catdimension</strong>"</p>
-                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-green-500 text-black font-bold text-xs rounded-xl">Đã Ghi Nhận</button>
+                        <button onclick="closeModal()" class="px-6 py-2 bg-green-500 text-black font-bold text-xs rounded-xl">Đã Ghi Nhận</button>
                     </div>
                 `;
             }
@@ -3048,7 +3153,7 @@
                         <i class="fas fa-gem text-5xl text-yellow-400 animate-bounce"></i>
                         <h2 class="text-2xl font-black text-yellow-400">JACKPOT! TRÚNG VẬT PHẨM HIẾM!</h2>
                         <p class="text-xs text-gray-300">Bạn đã quay trúng: Cuộn Phim Báo Động Huyền Thoại!</p>
-                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-yellow-500 text-black font-bold text-xs rounded-xl">Bỏ Vào Túi Đồ</button>
+                        <button onclick="closeModal()" class="px-6 py-2 bg-yellow-500 text-black font-bold text-xs rounded-xl">Bỏ Vào Túi Đồ</button>
                     </div>
                 `;
                 ProgressManager.addInventoryItem('danger_token', 'Cuộn Phim Báo Động', 'fa-compact-disc', 'Vật phẩm sống sót sau Danger Reel.');
@@ -3060,7 +3165,7 @@
                         <i class="fas fa-history text-5xl text-purple-400 animate-spin"></i>
                         <h2 class="text-xl font-bold text-purple-400">BẺ CONG KHÔNG-THỜI GIAN</h2>
                         <p class="text-xs text-gray-300">Đồng hồ REC đã bị dịch chuyển ngược dòng thực tại.</p>
-                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-purple-600 text-white font-bold text-xs rounded-xl">Khôi Phục Trật Tự</button>
+                        <button onclick="closeModal()" class="px-6 py-2 bg-purple-600 text-white font-bold text-xs rounded-xl">Khôi Phục Trật Tự</button>
                     </div>
                 `;
             }
@@ -3072,7 +3177,7 @@
                         <i class="fas fa-cat text-5xl text-fuchsia-400 animate-bounce"></i>
                         <h2 class="text-xl font-bold text-fuchsia-400">CUỘC XÂM LĂNG CỦA MÈO NEON!</h2>
                         <p class="text-xs text-gray-300">Toàn bộ màn hình đã bị bao phủ bởi năng lượng mèo lượng tử!</p>
-                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-fuchsia-600 text-white font-bold text-xs rounded-xl">Chấp Nhận Định Mệnh Meo</button>
+                        <button onclick="closeModal()" class="px-6 py-2 bg-fuchsia-600 text-white font-bold text-xs rounded-xl">Chấp Nhận Định Mệnh Meo</button>
                     </div>
                 `;
             }
@@ -3084,19 +3189,23 @@
                         <i class="fas fa-skull text-5xl text-red-500 animate-pulse"></i>
                         <h2 class="text-xl font-bold text-red-500">PHÁT THANH KINH DỊ NEON</h2>
                         <p class="text-xs text-gray-300">Màn hình đã chuyển sang chế độ Horror Noir Neon.</p>
-                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-red-600 text-white font-bold text-xs rounded-xl">Quay Về Ánh Sáng</button>
+                        <button onclick="closeModal()" class="px-6 py-2 bg-red-600 text-white font-bold text-xs rounded-xl">Quay Về Ánh Sáng</button>
                     </div>
                 `;
             }
 
             function closeModal() {
-                document.getElementById('main-body').classList.remove('shake-heavy', 'shake-light');
+                document.body.classList.remove('shake');
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
             }
 
             return { triggerRandomEvent, closeModal };
         })();
+
+        // Original global functions for Danger Reel
+        function startCinematicEvent() { CinematicGenerator.triggerRandomEvent(); }
+        function closeModal() { CinematicGenerator.closeModal(); }
 
         /* ==================================================
          * 13. THEME LAB (CSS Variables & Visual Presets)
@@ -3107,9 +3216,9 @@
                 body.className = body.className.replace(/filter-\w+/g, '');
                 if (filterName !== 'none') {
                     body.classList.add(`filter-${filterName}`);
-                    App.showToast(`Đổi bộ lọc: ${filterName.toUpperCase()} 🎨`);
+                    App.showToast(`Đã đổi bộ lọc phim: ${filterName.toUpperCase()} 🎨`);
                 } else {
-                    App.showToast('Khôi phục bộ lọc gốc 🎬');
+                    App.showToast('Đã khôi phục bộ lọc màu gốc 🎬');
                 }
                 AudioLab.playTone(600, 'sine', 0.15, 0.1);
             }
@@ -3179,6 +3288,9 @@
             };
         })();
 
+        // Original global setFilter
+        function setFilter(filterName) { ThemeLab.setFilter(filterName); }
+
         /* ==================================================
          * 14. SECRET DEVELOPER ROOM
          * ================================================== */
@@ -3207,7 +3319,7 @@
             }
 
             function unlockAllSecrets() {
-                ['konami', 'title_matrix', 'ninja_surge', 'cat_sequence', 'danger_longpress', 'right_click_reel', 'rec_anomaly', 'film_collector', 'four_corners'].forEach(k => {
+                ['konami', 'title_matrix', 'ninja_surge', 'cat_sequence', 'danger_longpress', 'right_click_reel', 'rec_anomaly', 'film_collector', 'four_corners', 'circle_mouse', 'retro_type', 'secret_button_appear', 'cat_pet', 'poster_combo'].forEach(k => {
                     if (!ProgressManager.data.secrets.includes(k)) ProgressManager.data.secrets.push(k);
                 });
                 ['first_contact', 'konami_god', 'matrix_init', 'chaos_master', 'sound_artist', 'toybox_hero', 'pong_champ', 'cipher_cracker', 'reflex_god', 'secret_hunter', 'arcade_veteran', 'danger_survivor'].forEach(a => {
@@ -3221,7 +3333,6 @@
                 App.showToast('CHEAT: Đã mở khóa toàn bộ thành tựu & bí mật! 🔑');
             }
 
-            // Simple FPS counter
             let lastLoop = performance.now();
             function fpsLoop() {
                 const thisLoop = performance.now();
@@ -3248,11 +3359,21 @@
                 ArchiveLab.render();
                 ProgressManager.renderVault();
 
-                // Track first interaction
                 window.addEventListener('click', () => {
                     AudioLab.init();
                     ProgressManager.unlockAchievement('first_contact');
                 }, { once: true });
+
+                // Esc key to close any modal
+                window.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        if (TerminalLab.isOpen()) TerminalLab.toggle();
+                        CinematicGenerator.closeModal();
+                        DevLab.close();
+                    } else if (e.key === '`' || e.key === '~') {
+                        TerminalLab.toggle();
+                    }
+                });
             }
 
             function switchTab(tabId) {
@@ -3270,7 +3391,13 @@
                     activeBtn.className = 'nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-cyan-900/60 text-cyan-300 border border-cyan-500 whitespace-nowrap transition flex items-center space-x-1.5';
                 }
 
-                if (tabId === 'arcade') {
+                // Auto-refresh canvas sizing upon becoming visible to fix 0x0 canvas bug
+                if (tabId === 'cinema') {
+                    ArcadeLab.initAsteroidsCanvas();
+                } else if (tabId === 'toybox') {
+                    ToyboxLab.refreshActive();
+                } else if (tabId === 'arcade') {
+                    ArcadeLab.switchGame(ArcadeLab.activeGame);
                     ProgressManager.unlockAchievement('arcade_veteran');
                 }
 
@@ -3309,6 +3436,9 @@
                 get currentTab() { return currentTab; }
             };
         })();
+
+        // Original showToast wrapper
+        function showToast(msg, iconClass = 'fa-magic') { App.showToast(msg, iconClass); }
 
         // Start Application
         window.addEventListener('DOMContentLoaded', App.init);
