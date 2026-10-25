@@ -1,0 +1,3317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINE-MANIA 3000 // Studio Điện Ảnh Kỳ Diệu (Ultimate Playground)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,700;1,400&family=Fira+Code:wght@400;600&family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --neon-primary: #00e5ff;
+            --neon-secondary: #d946ef;
+            --neon-accent: #facc15;
+            --bg-dark: #050508;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --card-opacity: 0.85;
+            --grain-opacity: 0.07;
+            --anim-speed: 1;
+            --zoom-level: 1;
+        }
+
+        /* Font Classes */
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-serif-movie { font-family: 'Playfair Display', serif; }
+        .font-code { font-family: 'Fira Code', monospace; }
+        .font-terminal { font-family: 'VT323', monospace; }
+
+        /* Film Grain Effect */
+        .film-grain {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 40;
+            opacity: var(--grain-opacity);
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            transition: opacity 0.3s ease;
+        }
+
+        /* CRT Scanline Effect */
+        .crt-scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 45;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 6px 100%;
+        }
+
+        /* RGB Chromatic Aberration */
+        .rgb-split {
+            text-shadow: 2px 0 #ff0055, -2px 0 #00e5ff;
+            filter: drop-shadow(2px 0 0 rgba(255,0,85,0.6)) drop-shadow(-2px 0 0 rgba(0,229,255,0.6));
+        }
+
+        /* Cinema Filters */
+        .filter-cyberpunk { filter: hue-rotate(180deg) contrast(125%) saturate(140%); }
+        .filter-noir { filter: grayscale(100%) contrast(160%) brightness(90%); }
+        .filter-retro80s { filter: sepia(40%) saturate(200%) hue-rotate(300deg) contrast(110%); }
+        .filter-horror { filter: saturate(30%) contrast(180%) hue-rotate(90deg) brightness(80%); }
+        .filter-disco { animation: discoBg 2s infinite linear; }
+        .filter-inverted { filter: invert(100%) hue-rotate(180deg); }
+        .filter-mirror { transform: scaleX(-1); }
+        .filter-rainbow { animation: rainbowCycle 4s linear infinite; }
+        .filter-invisible-cards .poster-card { opacity: 0.1 !important; }
+        .filter-bighead .mascot-avatar, .filter-bighead .card-icon { transform: scale(1.8) !important; }
+
+        @keyframes discoBg {
+            0% { filter: hue-rotate(0deg) saturate(200%); }
+            100% { filter: hue-rotate(360deg) saturate(200%); }
+        }
+        @keyframes rainbowCycle {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        /* Glitch Animation */
+        .glitch-text { position: relative; display: inline-block; }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            clip: rect(0, 0, 0, 0);
+        }
+        .is-glitching::before {
+            left: -2px; text-shadow: 2px 0 #ff0055;
+            animation: glitch-anim-1 0.4s infinite linear alternate-reverse;
+        }
+        .is-glitching::after {
+            left: 2px; text-shadow: -2px 0 #00e5ff;
+            animation: glitch-anim-2 0.3s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(20px, 9999px, 15px, 0); }
+            100% { clip: rect(42px, 9999px, 78px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(12px, 9999px, 60px, 0); }
+            100% { clip: rect(80px, 9999px, 5px, 0); }
+        }
+
+        /* Screen Shake */
+        .shake-light { animation: shakeLight 0.3s infinite; }
+        .shake-heavy { animation: shakeHeavy 0.4s infinite; }
+        @keyframes shakeLight {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-2px, 2px); }
+            75% { transform: translate(2px, -2px); }
+        }
+        @keyframes shakeHeavy {
+            10%, 90% { transform: translate3d(-4px, -2px, 0); }
+            20%, 80% { transform: translate3d(6px, 4px, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, -6px, 0); }
+            40%, 60% { transform: translate3d(8px, 6px, 0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #090a0f; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-primary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #60a5fa; }
+
+        /* Floating Mascot */
+        #interactive-mascot {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #interactive-mascot:hover {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        /* Safe area zoom container */
+        #viewport-wrapper {
+            transform-origin: center top;
+            transition: transform 0.4s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.001s !important;
+                transition-duration: 0.001s !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-100 overflow-x-hidden font-orbitron select-none transition-all duration-500" id="main-body">
+
+    <!-- Film Grain Overlay -->
+    <div id="film-grain-layer" class="film-grain"></div>
+
+    <!-- CRT Scanlines Overlay (Toggleable) -->
+    <div id="crt-overlay" class="crt-scanlines hidden"></div>
+
+    <!-- Letterbox Bars (Cinematic 21:9 Framing) -->
+    <div id="bar-top" class="fixed top-0 left-0 w-full h-12 md:h-14 bg-black/95 backdrop-blur-md z-50 flex items-center justify-between px-4 md:px-6 border-b border-gray-900 transition-all duration-300">
+        <div class="flex items-center space-x-3 text-xs tracking-widest text-cyan-400">
+            <span id="rec-dot" class="w-3 h-3 rounded-full bg-red-600 animate-ping cursor-pointer" title="Easter Egg: Nhấp 5 lần vào đây!"></span>
+            <span class="font-bold">REC</span>
+            <span class="hidden sm:inline text-gray-500 font-code">| 4K UHD 60FPS</span>
+            <span id="active-theme-tag" class="hidden md:inline px-2 py-0.5 rounded text-[10px] bg-cyan-950/80 text-cyan-300 border border-cyan-800">CYBERPUNK</span>
+        </div>
+
+        <div id="time-display" class="text-xs text-gray-300 font-code tracking-wider bg-gray-900/80 px-3 py-1 rounded border border-gray-800">
+            00:00:00:00
+        </div>
+
+        <div class="flex items-center space-x-2 md:space-x-4 text-xs">
+            <button id="film-icon-btn" onclick="SecretLab.triggerFilmIconClick()" class="text-purple-400 hover:text-purple-300 p-1.5 transition" title="Bộ sưu tập cuộn phim">
+                <i class="fas fa-film text-sm"></i>
+            </button>
+            <button onclick="TerminalLab.toggle()" class="bg-gray-800 hover:bg-gray-700 text-green-400 px-2.5 py-1 rounded border border-green-500/40 font-code flex items-center space-x-1 transition" title="Mở Terminal (Phím tắt: ` hoặc ~)">
+                <i class="fas fa-terminal"></i>
+                <span class="hidden sm:inline">CLI</span>
+            </button>
+            <button onclick="AudioLab.toggleSound()" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-800 transition flex items-center space-x-1" title="Bật/Tắt Âm Thanh">
+                <i class="fas fa-volume-up" id="sound-icon"></i>
+                <span id="sound-text" class="hidden sm:inline">Âm Thanh: Bật</span>
+            </button>
+            <button onclick="DevLab.open()" class="text-yellow-400 hover:text-yellow-300 p-1.5 transition" title="Phòng Nhà Phát Triển">
+                <i class="fas fa-key"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Bar & Navigation Dock -->
+    <div id="bar-bottom" class="fixed bottom-0 left-0 w-full h-14 md:h-16 bg-black/95 backdrop-blur-md z-50 flex items-center justify-between px-3 md:px-6 border-t border-gray-900 transition-all duration-300">
+        <!-- Navigation Tabs -->
+        <div class="flex items-center space-x-1 md:space-x-2 overflow-x-auto max-w-[70vw] py-1 no-scrollbar">
+            <button onclick="App.switchTab('cinema')" id="tab-btn-cinema" class="nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-cyan-900/60 text-cyan-300 border border-cyan-500 whitespace-nowrap transition flex items-center space-x-1.5">
+                <i class="fas fa-film"></i>
+                <span>Cinema</span>
+            </button>
+            <button onclick="App.switchTab('chaos')" id="tab-btn-chaos" class="nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-gray-900 text-gray-400 hover:text-white border border-gray-800 whitespace-nowrap transition flex items-center space-x-1.5">
+                <i class="fas fa-biohazard text-red-400"></i>
+                <span>Chaos Lab</span>
+            </button>
+            <button onclick="App.switchTab('toybox')" id="tab-btn-toybox" class="nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-gray-900 text-gray-400 hover:text-white border border-gray-800 whitespace-nowrap transition flex items-center space-x-1.5">
+                <i class="fas fa-cubes text-yellow-400"></i>
+                <span>Toybox</span>
+            </button>
+            <button onclick="App.switchTab('arcade')" id="tab-btn-arcade" class="nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-gray-900 text-gray-400 hover:text-white border border-gray-800 whitespace-nowrap transition flex items-center space-x-1.5">
+                <i class="fas fa-gamepad text-green-400"></i>
+                <span>Arcade</span>
+            </button>
+            <button onclick="App.switchTab('archive')" id="tab-btn-archive" class="nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-gray-900 text-gray-400 hover:text-white border border-gray-800 whitespace-nowrap transition flex items-center space-x-1.5">
+                <i class="fas fa-user-secret text-fuchsia-400"></i>
+                <span>Hồ Sơ Bí Mật</span>
+            </button>
+            <button onclick="App.switchTab('vault')" id="tab-btn-vault" class="nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-gray-900 text-gray-400 hover:text-white border border-gray-800 whitespace-nowrap transition flex items-center space-x-1.5">
+                <i class="fas fa-trophy text-amber-400"></i>
+                <span>Thành Tựu</span>
+            </button>
+            <button onclick="App.switchTab('themelab')" id="tab-btn-themelab" class="nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-gray-900 text-gray-400 hover:text-white border border-gray-800 whitespace-nowrap transition flex items-center space-x-1.5">
+                <i class="fas fa-palette text-blue-400"></i>
+                <span>Theme Lab</span>
+            </button>
+            <button onclick="App.switchTab('soundlab')" id="tab-btn-soundlab" class="nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-gray-900 text-gray-400 hover:text-white border border-gray-800 whitespace-nowrap transition flex items-center space-x-1.5">
+                <i class="fas fa-music text-pink-400"></i>
+                <span>Sound Lab</span>
+            </button>
+        </div>
+
+        <div class="flex items-center space-x-3 text-xs">
+            <span id="status-tag" class="text-cyan-400 animate-pulse font-code text-[11px] hidden lg:inline">
+                [MODE: NORMAL CINEMA]
+            </span>
+            <button onclick="MascotLab.toggleVisibility()" class="text-gray-400 hover:text-white transition p-1" title="Ẩn/Hiện Linh Vật">
+                <i class="fas fa-cat text-fuchsia-400"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Canvas Background Matrix & Dynamic Particles -->
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full -z-10 opacity-70 pointer-events-none"></canvas>
+
+    <!-- Canvas Fireworks, Glitch & Explosions Layer -->
+    <canvas id="fx-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-30"></canvas>
+
+    <!-- 4 Corners Easter Egg Target Zones -->
+    <div id="corner-tl" class="fixed top-0 left-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0"></div>
+    <div id="corner-tr" class="fixed top-0 right-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0"></div>
+    <div id="corner-br" class="fixed bottom-0 right-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0"></div>
+    <div id="corner-bl" class="fixed bottom-0 left-0 w-12 h-12 z-50 pointer-events-auto cursor-crosshair opacity-0"></div>
+
+    <!-- MAIN WRAPPER WITH DYNAMIC ZOOM / SHAKE -->
+    <div id="viewport-wrapper" class="w-full min-h-screen">
+
+        <!-- ========================================== -->
+        <!-- 1. CINEMA TAB (ORIGINAL CORE PRESERVED)     -->
+        <!-- ========================================== -->
+        <main id="tab-cinema" class="tab-view min-h-screen pt-16 pb-20 px-4 md:px-12 flex flex-col items-center justify-between relative z-10 max-w-7xl mx-auto">
+            
+            <!-- HEADER SECTION -->
+            <header class="text-center my-6 relative group">
+                <p class="text-xs tracking-widest text-cyan-400 uppercase mb-2 animate-bounce">
+                    ✨ Bấm 5 lần vào tiêu đề để mở khóa ma trận ✨
+                </p>
+                <h1 id="main-title" 
+                    data-text="CINE-MANIA 3000"
+                    class="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 cursor-pointer glitch-text hover:scale-105 transition-transform duration-300">
+                    CINE-MANIA 3000
+                </h1>
+                <p class="mt-3 text-sm md:text-base font-serif-movie italic text-gray-400">
+                    "Nơi Điện Ảnh Gặp Mạng Lưới Điên Rồ - Khám Phá Bí Mật Ẩn Giấu"
+                </p>
+            </header>
+
+            <!-- CINEMA CONTROLLER BAR -->
+            <div class="w-full max-w-4xl bg-gray-900/80 backdrop-blur-md p-4 rounded-2xl border border-gray-800 shadow-2xl my-4 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-2 text-sm text-cyan-400 font-bold">
+                    <i class="fas fa-sliders-h text-lg"></i>
+                    <span>BỘ LỌC PHIM:</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="ThemeLab.setFilter('none')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-cyan-600 border border-gray-700 transition active:scale-95">Gốc</button>
+                    <button onclick="ThemeLab.setFilter('cyberpunk')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-fuchsia-600 border border-gray-700 transition active:scale-95 text-fuchsia-400">Cyberpunk</button>
+                    <button onclick="ThemeLab.setFilter('noir')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-gray-600 border border-gray-700 transition active:scale-95 text-gray-300">Noir B&W</button>
+                    <button onclick="ThemeLab.setFilter('retro80s')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-yellow-600 border border-gray-700 transition active:scale-95 text-yellow-400">Retro 80s</button>
+                    <button onclick="ThemeLab.setFilter('horror')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gray-800 hover:bg-red-600 border border-gray-700 transition active:scale-95 text-red-500">Horror Neon</button>
+                    <button onclick="ThemeLab.setFilter('disco')" class="filter-btn px-3 py-1.5 text-xs rounded-xl bg-gradient-to-r from-red-500 via-green-500 to-blue-500 font-bold hover:opacity-90 border border-gray-700 transition active:scale-95 text-white">Disco Party 🎉</button>
+                </div>
+            </div>
+
+            <!-- CARDS / MOVIE POSTERS SECTION WITH EASTER EGGS -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl my-6">
+                
+                <!-- Poster Card 1 -->
+                <div id="poster-card-1"
+                     onclick="SecretLab.onCard1Click(this)" 
+                     class="poster-card group relative bg-gray-900/60 rounded-2xl p-5 border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] cursor-pointer overflow-hidden backdrop-blur-sm">
+                    <div class="absolute top-3 right-3 text-cyan-400 text-xs font-code">#EE-01</div>
+                    <div class="card-icon w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-2xl mb-4 group-hover:rotate-12 transition-transform">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-cyan-300">Ninja Không Gian</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-4">
+                        Nhấp vào đây để phát tín hiệu âm thanh Synthwave 8-bit. Nhấp liên tục 10 lần để tích tụ năng lượng bí mật!
+                    </p>
+                    <div class="text-xs text-cyan-500 font-code font-bold flex items-center justify-between">
+                        <span>GỢI Ý: Konami Code</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Poster Card 2 -->
+                <div id="poster-card-2"
+                     onclick="SecretLab.onCard2Click(this)" 
+                     class="poster-card group relative bg-gray-900/60 rounded-2xl p-5 border border-fuchsia-500/30 hover:border-fuchsia-400 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(217,70,239,0.3)] cursor-pointer overflow-hidden backdrop-blur-sm">
+                    <div class="absolute top-3 right-3 text-fuchsia-400 text-xs font-code">#EE-02</div>
+                    <div class="card-icon w-12 h-12 rounded-xl bg-fuchsia-500/20 text-fuchsia-400 flex items-center justify-center text-2xl mb-4 group-hover:-rotate-12 transition-transform">
+                        <i class="fas fa-cat"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-fuchsia-300">Mèo Neon Cyber</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-4">
+                        Chú mèo du hành thời gian qua các vũ trụ phim. Bấm 3 lần rồi vuốt ve linh vật ở góc phải để mở Chiều Không Gian Mèo!
+                    </p>
+                    <div class="text-xs text-fuchsia-500 font-code font-bold flex items-center justify-between">
+                        <span>GỢI Ý: Bấm Tiêu Đề</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Poster Card 3 -->
+                <div id="poster-card-3"
+                     onclick="SecretLab.onCard3Click(this)"
+                     oncontextmenu="SecretLab.onCard3ContextMenu(event)"
+                     class="poster-card group relative bg-gray-900/60 rounded-2xl p-5 border border-yellow-500/30 hover:border-yellow-400 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(234,179,8,0.3)] cursor-pointer overflow-hidden backdrop-blur-sm">
+                    <div class="absolute top-3 right-3 text-yellow-400 text-xs font-code">#EE-03</div>
+                    <div class="card-icon w-12 h-12 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-compact-disc"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-yellow-300">Cuộn Phim Báo Động</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-4">
+                        Chứa dữ liệu chưa được công bố. Nhấp chuột phải để xem menu kịch bản bí mật, hoặc bấm nút đỏ bên dưới nếu dám!
+                    </p>
+                    <div class="text-xs text-yellow-500 font-code font-bold flex items-center justify-between">
+                        <span>GỢI Ý: Giữ Nút Đỏ 3 Giây</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- DANGER REEL ACTION BUTTON (UPGRADED CINEMATIC GENERATOR) -->
+            <div class="my-6 text-center">
+                <button id="danger-btn" 
+                        onmousedown="SecretLab.startDangerHold()"
+                        onmouseup="SecretLab.endDangerHold()"
+                        ontouchstart="SecretLab.startDangerHold()"
+                        ontouchend="SecretLab.endDangerHold()"
+                        onclick="CinematicGenerator.triggerRandomEvent()" 
+                        class="relative group px-8 py-5 rounded-3xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white font-black text-lg md:text-xl shadow-[0_0_40px_rgba(225,29,72,0.6)] hover:shadow-[0_0_60px_rgba(225,29,72,0.9)] hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden">
+                    <span class="relative z-10 flex items-center space-x-3">
+                        <i class="fas fa-exclamation-triangle animate-bounce"></i>
+                        <span id="danger-btn-text">DANGER REEL: ĐỪNG BẤM VÀO ĐÂY!</span>
+                        <i class="fas fa-radiation animate-spin"></i>
+                    </span>
+                    <div id="danger-progress-bar" class="absolute left-0 bottom-0 top-0 bg-yellow-400/40 w-0 transition-all duration-100"></div>
+                </button>
+                <p class="text-[11px] text-gray-500 mt-2 font-code">Mẹo: Giữ chuột 3 giây để kích hoạt Reel Overdrive bí mật</p>
+            </div>
+
+            <!-- MINI-GAME SECTION PRESERVED ON CINEMA VIEW -->
+            <div class="w-full max-w-4xl bg-gray-900/90 rounded-2xl border border-gray-800 p-5 mt-4 text-center backdrop-blur-md">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-cyan-400 flex items-center space-x-2">
+                        <i class="fas fa-gamepad"></i>
+                        <span>MINI-GAME ARCADE: NÉ THIÊN THẠCH BẢO VỆ CUỘN PHIM</span>
+                    </h3>
+                    <div class="text-xs font-code text-yellow-400">
+                        SCORE: <span id="game-score">0</span> | BEST: <span id="game-best-score">0</span>
+                    </div>
+                </div>
+                <div id="game-container" class="relative w-full h-48 bg-black/80 rounded-xl overflow-hidden border border-gray-800 cursor-crosshair flex items-center justify-center">
+                    <canvas id="minigame-canvas" class="w-full h-full block"></canvas>
+                    <div id="game-start-overlay" class="absolute inset-0 bg-black/75 flex flex-col items-center justify-center space-y-3 z-20">
+                        <p class="text-xs text-gray-300">Di chuyển chuột hoặc vuốt tay để cuộn phim né thiên thạch & nhặt reel vàng!</p>
+                        <button onclick="ArcadeLab.startAsteroidsGame()" class="px-5 py-2 text-xs font-bold rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black transition shadow-lg active:scale-95">
+                            BẮT ĐẦU CHƠI (ASTEROIDS)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- ========================================== -->
+        <!-- 2. CHAOS CONTROL CENTER TAB                -->
+        <!-- ========================================== -->
+        <section id="tab-chaos" class="tab-view hidden min-h-screen pt-20 pb-24 px-4 md:px-12 max-w-6xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-400 to-yellow-400">
+                    <i class="fas fa-biohazard"></i> PHÒNG ĐIỀU KHIỂN HỖN LOẠN
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-2">
+                    Chủ động bẻ cong thực tại, can thiệp vật lý canvas, trọng lực và hình ảnh của trang web.
+                </p>
+                <div class="mt-4">
+                    <button onclick="ChaosLab.resetChaos()" class="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-red-600/40 transition active:scale-95">
+                        <i class="fas fa-undo mr-1"></i> Reset Toàn Bộ Chaos
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Chaos Card 1: Gravity Mode -->
+                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 hover:border-cyan-500 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-cyan-400"><i class="fas fa-arrow-down"></i> Trọng Lực Particles</span>
+                        <span id="chaos-tag-gravity" class="text-[10px] text-gray-400 font-code">TẮT</span>
+                    </div>
+                    <select id="chaos-select-gravity" onchange="ChaosLab.setGravity(this.value)" class="w-full bg-gray-800 text-xs text-gray-200 p-2 rounded border border-gray-700 outline-none">
+                        <option value="none">Không Trọng Lực (Bay tự do)</option>
+                        <option value="down">Rơi Xuống Đất</option>
+                        <option value="up">Bay Ngược Lên Trời</option>
+                        <option value="center">Hút Vào Trung Tâm</option>
+                    </select>
+                </div>
+
+                <!-- Chaos Card 2: Time Warp -->
+                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 hover:border-cyan-500 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-purple-400"><i class="fas fa-tachometer-alt"></i> Time Warp (Tốc độ)</span>
+                        <span id="chaos-val-time" class="text-[10px] text-gray-400 font-code">1.0x</span>
+                    </div>
+                    <input type="range" min="0.1" max="4.0" step="0.1" value="1.0" oninput="ChaosLab.setTimeWarp(this.value)" class="w-full accent-purple-500">
+                </div>
+
+                <!-- Chaos Card 3: Magnetic Cursor -->
+                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 hover:border-cyan-500 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-pink-400"><i class="fas fa-magnet"></i> Chuột Từ Tính</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="ChaosLab.setMagnetic('attract')" class="flex-1 py-1.5 text-[11px] bg-gray-800 hover:bg-pink-900/40 border border-gray-700 rounded text-pink-300">Hút Hạt</button>
+                        <button onclick="ChaosLab.setMagnetic('repel')" class="flex-1 py-1.5 text-[11px] bg-gray-800 hover:bg-pink-900/40 border border-gray-700 rounded text-pink-300">Đẩy Hạt</button>
+                        <button onclick="ChaosLab.setMagnetic('none')" class="px-2 py-1.5 text-[11px] bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded text-gray-400">Tắt</button>
+                    </div>
+                </div>
+
+                <!-- Chaos Card 4: Reality Glitch -->
+                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 hover:border-cyan-500 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-red-400"><i class="fas fa-radiation"></i> Reality Glitch</span>
+                    </div>
+                    <button onclick="ChaosLab.triggerGlitchPulse()" class="w-full py-2 text-xs bg-red-950/60 hover:bg-red-900 border border-red-700/60 rounded text-red-300 font-bold active:scale-95 transition">
+                        KÍCH HOẠT NHIỄU SÓNG
+                    </button>
+                </div>
+
+                <!-- Chaos Card 5: Screen Shake -->
+                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 hover:border-cyan-500 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-yellow-400"><i class="fas fa-house-damage"></i> Rung Màn Hình</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="ChaosLab.setShake('light')" class="flex-1 py-1.5 text-[11px] bg-gray-800 hover:bg-yellow-900/40 border border-gray-700 rounded text-yellow-300">Nhẹ</button>
+                        <button onclick="ChaosLab.setShake('heavy')" class="flex-1 py-1.5 text-[11px] bg-gray-800 hover:bg-yellow-900/40 border border-gray-700 rounded text-yellow-300">Mạnh</button>
+                        <button onclick="ChaosLab.setShake('none')" class="px-2 py-1.5 text-[11px] bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded text-gray-400">Dừng</button>
+                    </div>
+                </div>
+
+                <!-- Chaos Card 6: Invert & Mirror -->
+                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 hover:border-cyan-500 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-blue-400"><i class="fas fa-adjust"></i> Đảo Màu / Gương</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="ChaosLab.toggleInvert()" class="flex-1 py-1.5 text-[11px] bg-gray-800 hover:bg-blue-900/40 border border-gray-700 rounded text-blue-300">Đảo Màu</button>
+                        <button onclick="ChaosLab.toggleMirror()" class="flex-1 py-1.5 text-[11px] bg-gray-800 hover:bg-blue-900/40 border border-gray-700 rounded text-blue-300">Gương</button>
+                    </div>
+                </div>
+
+                <!-- Chaos Card 7: Cinematic Zoom -->
+                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 hover:border-cyan-500 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-green-400"><i class="fas fa-search-plus"></i> Cinematic Zoom</span>
+                        <span id="chaos-val-zoom" class="text-[10px] text-gray-400 font-code">1.0x</span>
+                    </div>
+                    <input type="range" min="0.7" max="1.4" step="0.05" value="1.0" oninput="ChaosLab.setZoom(this.value)" class="w-full accent-green-500">
+                </div>
+
+                <!-- Chaos Card 8: Fun Extras (Big Head, Confetti, Invisibility) -->
+                <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 hover:border-cyan-500 transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-amber-400"><i class="fas fa-theater-masks"></i> Hiệu Ứng Vui Nhộn</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-1.5 text-[10px]">
+                        <button onclick="ChaosLab.toggleBigHead()" class="py-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded text-gray-200">Big Head</button>
+                        <button onclick="ChaosLab.triggerConfettiRain()" class="py-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded text-yellow-300">Pháo Giấy 🎉</button>
+                        <button onclick="ChaosLab.toggleInvisibility()" class="py-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded text-purple-300">Tàng Hình Thẻ</button>
+                        <button onclick="ChaosLab.toggleRainbow()" class="py-1 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded text-cyan-300">Rainbow</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3. INTERACTIVE TOYBOX TAB                  -->
+        <!-- ========================================== -->
+        <section id="tab-toybox" class="tab-view hidden min-h-screen pt-20 pb-24 px-4 md:px-12 max-w-6xl mx-auto">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-emerald-400 to-cyan-400">
+                    <i class="fas fa-cubes"></i> HỘP ĐỒ CHƠI KỸ THUẬT SỐ (TOYBOX)
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-1">
+                    Khám phá 4 phòng đồ chơi độc lập: Bãi cát vật lý, Bút vẽ hạt Neon, Hố đen vũ trụ và Đồ chơi xả stress.
+                </p>
+            </div>
+
+            <!-- Toybox Sub-Navigation -->
+            <div class="flex justify-center gap-2 mb-6 flex-wrap">
+                <button onclick="ToyboxLab.switchToy('sandbox')" id="subtoy-btn-sandbox" class="px-4 py-1.5 text-xs rounded-xl bg-yellow-500/20 text-yellow-300 border border-yellow-500/50">1. Gravity Sandbox</button>
+                <button onclick="ToyboxLab.switchToy('painter')" id="subtoy-btn-painter" class="px-4 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800">2. Particle Painter</button>
+                <button onclick="ToyboxLab.switchToy('blackhole')" id="subtoy-btn-blackhole" class="px-4 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800">3. Black Hole Lab</button>
+                <button onclick="ToyboxLab.switchToy('fidget')" id="subtoy-btn-fidget" class="px-4 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800">4. Digital Fidget</button>
+            </div>
+
+            <!-- TOY 1: Gravity Sandbox -->
+            <div id="toy-panel-sandbox" class="toy-panel bg-gray-900/80 p-5 rounded-2xl border border-gray-800">
+                <div class="flex flex-wrap justify-between items-center mb-3 gap-2">
+                    <div class="text-xs text-yellow-400 font-bold flex items-center space-x-2">
+                        <i class="fas fa-circle"></i>
+                        <span>BÃI THÍ NGHIỆM VẬT LÝ 2D: Nhấp để thả bóng, kéo chuột để ném</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="ToyboxLab.spawnBalls(5)" class="px-3 py-1 bg-yellow-600 hover:bg-yellow-500 text-black font-bold text-xs rounded-lg transition">+5 Quả Cầu</button>
+                        <button onclick="ToyboxLab.toggleAntiGravity()" id="toy-antigrav-btn" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-xs rounded-lg transition">Chống Trọng Lực: TẮT</button>
+                        <button onclick="ToyboxLab.clearSandbox()" class="px-3 py-1 bg-red-900/60 hover:bg-red-800 text-red-300 text-xs rounded-lg transition">Xóa</button>
+                    </div>
+                </div>
+                <div class="relative w-full h-80 bg-black/90 rounded-xl overflow-hidden border border-gray-800">
+                    <canvas id="sandbox-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+                </div>
+            </div>
+
+            <!-- TOY 2: Particle Painter -->
+            <div id="toy-panel-painter" class="toy-panel hidden bg-gray-900/80 p-5 rounded-2xl border border-gray-800">
+                <div class="flex flex-wrap justify-between items-center mb-3 gap-2 text-xs">
+                    <div class="flex items-center space-x-2">
+                        <label class="text-cyan-400 font-bold">Kiểu Bút:</label>
+                        <select id="painter-brush" class="bg-gray-800 text-white p-1 rounded border border-gray-700">
+                            <option value="neon">Neon Phát Sáng</option>
+                            <option value="fire">Ngọn Lửa Cyber</option>
+                            <option value="stars">Sao Băng Lấp Lánh</option>
+                            <option value="rainbow">Ruy Băng Cầu Vồng</option>
+                        </select>
+                        <label class="text-cyan-400 font-bold ml-2">Cỡ:</label>
+                        <input type="range" id="painter-size" min="2" max="40" value="12" class="w-20 accent-cyan-400">
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="ToyboxLab.clearPainter()" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded">Xóa Tranh</button>
+                        <button onclick="ToyboxLab.savePainting()" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-black font-bold rounded">Tải Ảnh PNG 🎨</button>
+                    </div>
+                </div>
+                <div class="relative w-full h-80 bg-black rounded-xl overflow-hidden border border-gray-800 cursor-crosshair">
+                    <canvas id="painter-canvas" class="w-full h-full block"></canvas>
+                </div>
+            </div>
+
+            <!-- TOY 3: Black Hole Playground -->
+            <div id="toy-panel-blackhole" class="toy-panel hidden bg-gray-900/80 p-5 rounded-2xl border border-gray-800">
+                <div class="flex justify-between items-center mb-3 text-xs">
+                    <span class="text-purple-400 font-bold"><i class="fas fa-atom"></i> Nhấp lên màn hình để tạo Điểm Hút (Hố Đen) hoặc Điểm Đẩy (Hố Trắng)</span>
+                    <div class="flex gap-2">
+                        <button onclick="ToyboxLab.setHoleType('attract')" id="hole-type-attract" class="px-3 py-1 bg-purple-700 text-white rounded">Hút (Hố Đen)</button>
+                        <button onclick="ToyboxLab.setHoleType('repel')" id="hole-type-repel" class="px-3 py-1 bg-gray-800 text-gray-400 rounded">Đẩy (Hố Trắng)</button>
+                        <button onclick="ToyboxLab.clearHoles()" class="px-3 py-1 bg-red-900/60 text-red-300 rounded">Xóa Các Hố</button>
+                    </div>
+                </div>
+                <div class="relative w-full h-80 bg-black rounded-xl overflow-hidden border border-gray-800 cursor-pointer">
+                    <canvas id="blackhole-canvas" class="w-full h-full block"></canvas>
+                </div>
+            </div>
+
+            <!-- TOY 4: Digital Fidget Toys -->
+            <div id="toy-panel-fidget" class="toy-panel hidden bg-gray-900/80 p-5 rounded-2xl border border-gray-800">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Fidget 1: Mechanical Toggle Switch -->
+                    <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 text-center flex flex-col items-center justify-between h-52">
+                        <span class="text-xs font-bold text-cyan-400">CÔNG TẮC CƠ HỌC NEON</span>
+                        <div onclick="ToyboxLab.toggleMechanicalSwitch()" id="fidget-mech-switch" class="w-16 h-28 bg-gray-900 border-2 border-cyan-500 rounded-2xl relative cursor-pointer p-1 transition-all">
+                            <div id="fidget-mech-lever" class="w-full h-12 bg-cyan-500 rounded-xl shadow-[0_0_15px_#00e5ff] transition-all transform translate-y-0"></div>
+                        </div>
+                        <span id="fidget-switch-status" class="text-[10px] text-cyan-400 font-code">TRẠNG THÁI: ON</span>
+                    </div>
+
+                    <!-- Fidget 2: Inertial Spinner -->
+                    <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 text-center flex flex-col items-center justify-between h-52">
+                        <span class="text-xs font-bold text-fuchsia-400">CON QUAY QUÁN TÍNH</span>
+                        <div id="spinner-disc" onclick="ToyboxLab.spinFidgetSpinner()" class="w-20 h-20 rounded-full border-4 border-dashed border-fuchsia-500 flex items-center justify-center cursor-pointer transition-transform hover:scale-110 shadow-[0_0_20px_rgba(217,70,239,0.5)]">
+                            <i class="fas fa-atom text-2xl text-fuchsia-300"></i>
+                        </div>
+                        <span id="spinner-rpm" class="text-[10px] text-fuchsia-400 font-code">0 RPM</span>
+                    </div>
+
+                    <!-- Fidget 3: Tension Slider -->
+                    <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 text-center flex flex-col items-center justify-between h-52">
+                        <span class="text-xs font-bold text-yellow-400">THANH KÉO ĐÀN HỒI</span>
+                        <div class="w-full px-4">
+                            <input type="range" id="fidget-spring-slider" min="0" max="100" value="50" oninput="ToyboxLab.onSpringSlider(this)" onmouseup="ToyboxLab.releaseSpringSlider(this)" ontouchend="ToyboxLab.releaseSpringSlider(this)" class="w-full accent-yellow-400">
+                        </div>
+                        <p class="text-[10px] text-gray-400">Kéo rồi buông tay để đàn hồi về giữa</p>
+                    </div>
+
+                    <!-- Fidget 4: Mystery Box -->
+                    <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 text-center flex flex-col items-center justify-between h-52">
+                        <span class="text-xs font-bold text-emerald-400">HỘP MA THUẬT BÍ ẨN</span>
+                        <button onclick="ToyboxLab.openMysteryBox()" id="mystery-box-btn" class="w-20 h-20 bg-emerald-950/80 border-2 border-emerald-500 rounded-2xl flex items-center justify-center text-3xl hover:scale-105 active:scale-95 transition shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+                            🎁
+                        </button>
+                        <span id="mystery-box-label" class="text-[10px] text-emerald-300 font-code">Nhấp để mở quà!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4. MINI-GAME ARCADE TAB                    -->
+        <!-- ========================================== -->
+        <section id="tab-arcade" class="tab-view hidden min-h-screen pt-20 pb-24 px-4 md:px-12 max-w-6xl mx-auto">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500">
+                    <i class="fas fa-gamepad"></i> KHU TRÒ CHƠI ARCADE ĐIỆN ẢNH
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-1">
+                    5 trò chơi hoàn chỉnh độc lập: Né thiên thạch, Neon Pong, Memory Glitch, Code Breaker và Reaction Test.
+                </p>
+            </div>
+
+            <div class="flex justify-center gap-2 mb-6 flex-wrap">
+                <button onclick="ArcadeLab.switchGame('asteroids')" id="game-btn-asteroids" class="px-3 py-1.5 text-xs rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/50">1. Dodge Asteroids</button>
+                <button onclick="ArcadeLab.switchGame('pong')" id="game-btn-pong" class="px-3 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800">2. Neon Pong</button>
+                <button onclick="ArcadeLab.switchGame('memory')" id="game-btn-memory" class="px-3 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800">3. Memory Glitch</button>
+                <button onclick="ArcadeLab.switchGame('codebreaker')" id="game-btn-codebreaker" class="px-3 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800">4. Code Breaker</button>
+                <button onclick="ArcadeLab.switchGame('reaction')" id="game-btn-reaction" class="px-3 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800">5. Reaction Test</button>
+            </div>
+
+            <!-- Arcade Container Display -->
+            <div id="arcade-viewport" class="bg-gray-900/90 p-5 rounded-2xl border border-gray-800">
+                
+                <!-- GAME 1: Dodge Asteroids -->
+                <div id="arcade-game-asteroids" class="arcade-subgame">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold text-cyan-400">NÉ THIÊN THẠCH: Di chuột hoặc vuốt để cuộn phim di chuyển</span>
+                        <div class="text-xs font-code text-yellow-400">
+                            SCORE: <span id="arc-dodge-score">0</span> | BEST: <span id="arc-dodge-best">0</span>
+                        </div>
+                    </div>
+                    <div class="relative w-full h-80 bg-black/90 rounded-xl overflow-hidden border border-gray-800">
+                        <canvas id="arc-dodge-canvas" class="w-full h-full block"></canvas>
+                        <div id="arc-dodge-overlay" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center space-y-3">
+                            <h4 class="text-base font-bold text-cyan-300">THOÁT HIỂM KHÔNG GIAN</h4>
+                            <p class="text-xs text-gray-400">Né thiên thạch đỏ, nhặt cuộn phim vàng để nhận 50 điểm!</p>
+                            <button onclick="ArcadeLab.startAsteroidsGame()" class="px-6 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs transition">
+                                CHƠI NGAY
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 2: Neon Pong -->
+                <div id="arcade-game-pong" class="arcade-subgame hidden">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold text-fuchsia-400">NEON PONG: Dùng chuột/ngón tay (hoặc phím W/S) để đỡ bóng</span>
+                        <div class="text-xs font-code text-fuchsia-400">
+                            PLAYER: <span id="pong-score-p1">0</span> | AI: <span id="pong-score-ai">0</span>
+                        </div>
+                    </div>
+                    <div class="relative w-full h-80 bg-black rounded-xl overflow-hidden border border-gray-800">
+                        <canvas id="pong-canvas" class="w-full h-full block"></canvas>
+                        <div id="pong-overlay" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center space-y-3">
+                            <h4 class="text-base font-bold text-fuchsia-400">NEON PONG DUEL</h4>
+                            <p class="text-xs text-gray-400">Thi đấu 5 điểm thắng với AI phản xạ lượng tử!</p>
+                            <button onclick="ArcadeLab.startPongGame()" class="px-6 py-2 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold text-xs transition">
+                                GIAO BÓNG
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 3: Memory Glitch -->
+                <div id="arcade-game-memory" class="arcade-subgame hidden">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold text-yellow-400">MEMORY GLITCH: Lật thẻ tìm cặp hình điện ảnh giống nhau</span>
+                        <div class="text-xs font-code text-yellow-400">
+                            CẶP: <span id="memory-matches">0</span>/8 | LƯỢT: <span id="memory-moves">0</span>
+                        </div>
+                    </div>
+                    <div id="memory-grid" class="grid grid-cols-4 gap-3 max-w-md mx-auto p-2">
+                        <!-- 16 cards dynamically populated by ArcadeLab -->
+                    </div>
+                    <div class="text-center mt-4">
+                        <button onclick="ArcadeLab.initMemoryGame()" class="px-4 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-yellow-300 rounded-lg">Chơi Lại</button>
+                    </div>
+                </div>
+
+                <!-- GAME 4: Code Breaker -->
+                <div id="arcade-game-codebreaker" class="arcade-subgame hidden">
+                    <div class="max-w-md mx-auto text-center space-y-4">
+                        <h4 class="text-sm font-bold text-cyan-400">CYBER DECRYPTOR: Đoán mã bí mật gồm 4 chữ số</h4>
+                        <p class="text-xs text-gray-400">Xanh lá: Đúng số và vị trí. Vàng: Đúng số nhưng sai vị trí. 7 cơ hội.</p>
+                        
+                        <div class="flex justify-center gap-2 font-code text-2xl">
+                            <input type="text" id="cb-input" maxlength="4" placeholder="1234" class="w-36 text-center bg-black border-2 border-cyan-500 rounded-xl text-yellow-400 outline-none tracking-widest">
+                            <button onclick="ArcadeLab.submitCodeGuess()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-black font-bold text-xs rounded-xl">GIẢI MÃ</button>
+                        </div>
+
+                        <div id="cb-history" class="h-44 overflow-y-auto bg-black/80 rounded-xl p-3 border border-gray-800 text-xs font-code space-y-1">
+                            <p class="text-gray-500">Nhập 4 số không trùng lặp và bấm Giải Mã...</p>
+                        </div>
+                        <button onclick="ArcadeLab.initCodeBreaker()" class="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-400 rounded">Tạo Mã Mới</button>
+                    </div>
+                </div>
+
+                <!-- GAME 5: Reaction Test -->
+                <div id="arcade-game-reaction" class="arcade-subgame hidden">
+                    <div class="max-w-lg mx-auto text-center">
+                        <div id="reaction-box" onclick="ArcadeLab.handleReactionClick()" class="w-full h-60 rounded-2xl bg-red-950/80 border-2 border-red-500 flex flex-col items-center justify-center cursor-pointer select-none transition-all shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+                            <i class="fas fa-bolt text-4xl mb-3 text-red-400" id="reaction-icon"></i>
+                            <h3 class="text-xl font-bold" id="reaction-title">CHỜ TÍN HIỆU ĐỔI MÀU...</h3>
+                            <p class="text-xs text-gray-300 mt-2" id="reaction-desc">Khi màn hình chuyển sang XANH NEON, nhấp càng nhanh càng tốt!</p>
+                        </div>
+                        <div class="mt-4 text-xs font-code text-yellow-400">
+                            KỶ LỤC TỐT NHẤT: <span id="reaction-best">Chưa có</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 5. SECRET ARCHIVE TAB                      -->
+        <!-- ========================================== -->
+        <section id="tab-archive" class="tab-view hidden min-h-screen pt-20 pb-24 px-4 md:px-12 max-w-5xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-pink-400 to-amber-300">
+                    <i class="fas fa-user-secret"></i> KHO HỒ SƠ TUYỆT MẬT
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-1">
+                    Các tài liệu nội bộ, thông điệp phá vỡ bức tường thứ tư và các mật mã từ vũ trụ CINE-MANIA.
+                </p>
+                <div class="text-xs font-code text-fuchsia-400 mt-2">
+                    TIẾN TRÌNH GIẢI MÃ: <span id="archive-unlocked-count">0</span> / 8 HỒ SƠ
+                </div>
+            </div>
+
+            <!-- Documents List -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="archive-doc-list">
+                <!-- Dynamically rendered by ArchiveLab -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 6. ACHIEVEMENTS & INVENTORY TAB            -->
+        <!-- ========================================== -->
+        <section id="tab-vault" class="tab-view hidden min-h-screen pt-20 pb-24 px-4 md:px-12 max-w-6xl mx-auto">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-orange-500">
+                    <i class="fas fa-trophy"></i> THÀNH TỰU & KHO VẬT PHẨM
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-1">
+                    Theo dõi huy hiệu đã mở khóa, bí mật đã tìm thấy và kho đồ chơi số của bạn.
+                </p>
+            </div>
+
+            <!-- Vault Sub-tabs -->
+            <div class="flex justify-center gap-3 mb-6">
+                <button onclick="ProgressManager.switchVaultTab('achievements')" id="vault-tab-btn-ach" class="px-5 py-2 text-xs font-bold rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/60">
+                    BẢNG THÀNH TỰU (<span id="vault-ach-count">0/12</span>)
+                </button>
+                <button onclick="ProgressManager.switchVaultTab('inventory')" id="vault-tab-btn-inv" class="px-5 py-2 text-xs font-bold rounded-xl bg-gray-900 text-gray-400 border border-gray-800">
+                    KHO VẬT PHẨM (<span id="vault-inv-count">0/8</span>)
+                </button>
+            </div>
+
+            <!-- Achievements View -->
+            <div id="vault-view-achievements" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Populated dynamically -->
+            </div>
+
+            <!-- Inventory View -->
+            <div id="vault-view-inventory" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Populated dynamically -->
+            </div>
+
+            <div class="text-center mt-10">
+                <button onclick="ProgressManager.confirmReset()" class="text-xs text-red-500 hover:text-red-400 underline font-code">
+                    [Đặt lại toàn bộ tiến trình & thành tựu]
+                </button>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 7. THEME LAB TAB                           -->
+        <!-- ========================================== -->
+        <section id="tab-themelab" class="tab-view hidden min-h-screen pt-20 pb-24 px-4 md:px-12 max-w-5xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-500">
+                    <i class="fas fa-palette"></i> PHÒNG THÍ NGHIỆM GIAO DIỆN
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-1">
+                    Tùy biến các biến số CSS, màu Neon, hạt nền, vạch quét màn hình CRT và hiệu ứng phim.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-900/80 p-6 rounded-2xl border border-gray-800">
+                <!-- Left: Color Controls -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold text-cyan-400 border-b border-gray-800 pb-2">MÀU SẮC NEON</h3>
+                    <div>
+                        <label class="text-xs text-gray-300 block mb-1">Màu Neon Chính (Primary):</label>
+                        <input type="color" id="theme-color-primary" value="#00e5ff" onchange="ThemeLab.updateCustomColors()" class="w-full h-8 bg-transparent cursor-pointer rounded">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-300 block mb-1">Màu Neon Phụ (Secondary):</label>
+                        <input type="color" id="theme-color-secondary" value="#d946ef" onchange="ThemeLab.updateCustomColors()" class="w-full h-8 bg-transparent cursor-pointer rounded">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-300 block mb-1">Màu Nhấn (Accent):</label>
+                        <input type="color" id="theme-color-accent" value="#facc15" onchange="ThemeLab.updateCustomColors()" class="w-full h-8 bg-transparent cursor-pointer rounded">
+                    </div>
+                </div>
+
+                <!-- Right: Visual FX Toggles -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold text-cyan-400 border-b border-gray-800 pb-2">HIỆU ỨNG THỊ GIÁC</h3>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-300">Vạch quét màn hình CRT:</span>
+                        <input type="checkbox" id="theme-toggle-crt" onchange="ThemeLab.toggleCRT(this.checked)" class="w-4 h-4 accent-cyan-400">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-300">Nhiễu màu Chromatic Aberration:</span>
+                        <input type="checkbox" id="theme-toggle-rgb" onchange="ThemeLab.toggleRGB(this.checked)" class="w-4 h-4 accent-cyan-400">
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-300 mb-1">
+                            <span>Độ mạnh hạt Film Grain:</span>
+                            <span id="grain-val-display">7%</span>
+                        </div>
+                        <input type="range" min="0" max="0.3" step="0.01" value="0.07" oninput="ThemeLab.setGrain(this.value)" class="w-full accent-cyan-400">
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-300 mb-1">
+                            <span>Mật độ hạt nền (Particles):</span>
+                            <span id="particles-density-display">Bình thường</span>
+                        </div>
+                        <input type="range" min="30" max="250" value="80" oninput="ThemeLab.setParticleCount(this.value)" class="w-full accent-cyan-400">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme Presets -->
+            <div class="mt-6 flex flex-wrap gap-2 justify-center">
+                <button onclick="ThemeLab.applyPreset('cyberpunk')" class="px-4 py-2 text-xs rounded-xl bg-gray-800 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300">Preset: Cyberpunk</button>
+                <button onclick="ThemeLab.applyPreset('synthwave')" class="px-4 py-2 text-xs rounded-xl bg-gray-800 hover:bg-pink-900 border border-pink-500/40 text-pink-300">Preset: Synthwave 80s</button>
+                <button onclick="ThemeLab.applyPreset('matrix')" class="px-4 py-2 text-xs rounded-xl bg-gray-800 hover:bg-green-900 border border-green-500/40 text-green-300">Preset: Matrix Green</button>
+                <button onclick="ThemeLab.applyPreset('cosmic')" class="px-4 py-2 text-xs rounded-xl bg-gray-800 hover:bg-purple-900 border border-purple-500/40 text-purple-300">Preset: Cosmic Void</button>
+                <button onclick="ThemeLab.resetTheme()" class="px-4 py-2 text-xs rounded-xl bg-gray-800 hover:bg-red-900 border border-red-500/40 text-red-300">Mặc Định</button>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 8. SOUND LAB TAB                           -->
+        <!-- ========================================== -->
+        <section id="tab-soundlab" class="tab-view hidden min-h-screen pt-20 pb-24 px-4 md:px-12 max-w-5xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-rose-400 to-yellow-400">
+                    <i class="fas fa-music"></i> PHÒNG THÍ NGHIỆM ÂM THANH SYNTH
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-1">
+                    Bộ tổng hợp âm thanh Web Audio API thời gian thực không sử dụng bất kỳ tệp âm thanh bên ngoài nào!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-900/80 p-6 rounded-2xl border border-gray-800">
+                <!-- Soundboard FX Buttons -->
+                <div>
+                    <h3 class="text-sm font-bold text-pink-400 mb-3"><i class="fas fa-drum"></i> BÀN NÚT HIỆU ỨNG (SOUNDBOARD)</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <button onclick="AudioLab.playPresetSFX('laser')" class="py-2.5 bg-gray-800 hover:bg-pink-900/60 rounded-xl border border-pink-700/50 text-pink-300 active:scale-95 transition">Laser Phim</button>
+                        <button onclick="AudioLab.playPresetSFX('coin')" class="py-2.5 bg-gray-800 hover:bg-yellow-900/60 rounded-xl border border-yellow-700/50 text-yellow-300 active:scale-95 transition">Coin Arcade</button>
+                        <button onclick="AudioLab.playPresetSFX('explosion')" class="py-2.5 bg-gray-800 hover:bg-red-900/60 rounded-xl border border-red-700/50 text-red-300 active:scale-95 transition">Nổ Siêu Tân Tinh</button>
+                        <button onclick="AudioLab.playPresetSFX('teleport')" class="py-2.5 bg-gray-800 hover:bg-cyan-900/60 rounded-xl border border-cyan-700/50 text-cyan-300 active:scale-95 transition">Dịch Chuyển Tức Thời</button>
+                        <button onclick="AudioLab.playPresetSFX('glitch')" class="py-2.5 bg-gray-800 hover:bg-purple-900/60 rounded-xl border border-purple-700/50 text-purple-300 active:scale-95 transition">Nhiễu Sóng</button>
+                        <button onclick="AudioLab.playRandomMelody()" class="py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl text-white font-bold active:scale-95 transition">Giai Điệu Ngẫu Nhiên 🎶</button>
+                    </div>
+
+                    <!-- Ambient Drone Generator -->
+                    <div class="mt-4 p-3 bg-black/60 rounded-xl border border-gray-800 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-gray-200 block">Tiếng Ồn Vũ Trụ (Ambient Drone):</span>
+                            <span class="text-[10px] text-gray-400">Âm nền thư giãn tạo bởi 2 bộ dao động sóng sine</span>
+                        </div>
+                        <button onclick="AudioLab.toggleAmbient()" id="ambient-btn" class="px-4 py-1.5 text-xs rounded-xl bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700">
+                            BẬT
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 8-Note Synth Keyboard -->
+                <div>
+                    <h3 class="text-sm font-bold text-cyan-400 mb-3"><i class="fas fa-keyboard"></i> ĐÀN PHÍM SYNTHWAVE (C4 - C5)</h3>
+                    <div class="grid grid-cols-4 gap-2 mb-4">
+                        <button onclick="AudioLab.playNote(261.63)" class="py-4 bg-gray-800 hover:bg-cyan-500 hover:text-black rounded-xl text-xs font-bold font-code transition active:scale-95 border border-gray-700">C4</button>
+                        <button onclick="AudioLab.playNote(293.66)" class="py-4 bg-gray-800 hover:bg-cyan-500 hover:text-black rounded-xl text-xs font-bold font-code transition active:scale-95 border border-gray-700">D4</button>
+                        <button onclick="AudioLab.playNote(329.63)" class="py-4 bg-gray-800 hover:bg-cyan-500 hover:text-black rounded-xl text-xs font-bold font-code transition active:scale-95 border border-gray-700">E4</button>
+                        <button onclick="AudioLab.playNote(349.23)" class="py-4 bg-gray-800 hover:bg-cyan-500 hover:text-black rounded-xl text-xs font-bold font-code transition active:scale-95 border border-gray-700">F4</button>
+                        <button onclick="AudioLab.playNote(392.00)" class="py-4 bg-gray-800 hover:bg-cyan-500 hover:text-black rounded-xl text-xs font-bold font-code transition active:scale-95 border border-gray-700">G4</button>
+                        <button onclick="AudioLab.playNote(440.00)" class="py-4 bg-gray-800 hover:bg-cyan-500 hover:text-black rounded-xl text-xs font-bold font-code transition active:scale-95 border border-gray-700">A4</button>
+                        <button onclick="AudioLab.playNote(493.88)" class="py-4 bg-gray-800 hover:bg-cyan-500 hover:text-black rounded-xl text-xs font-bold font-code transition active:scale-95 border border-gray-700">B4</button>
+                        <button onclick="AudioLab.playNote(523.25)" class="py-4 bg-cyan-600 hover:bg-cyan-400 text-black rounded-xl text-xs font-black font-code transition active:scale-95 border border-cyan-400">C5</button>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs text-gray-300 mb-1">
+                            <span>Âm lượng tổng (Master Volume):</span>
+                            <span id="volume-val-display">80%</span>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.05" value="0.8" oninput="AudioLab.setMasterVolume(this.value)" class="w-full accent-cyan-400">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div> <!-- End Viewport Wrapper -->
+
+    <!-- ========================================== -->
+    <!-- INTERACTIVE MASCOT (NEON CYBER CAT)       -->
+    <!-- ========================================== -->
+    <div id="interactive-mascot" class="fixed bottom-16 right-4 z-40 flex flex-col items-end pointer-events-auto">
+        <!-- Speech Bubble -->
+        <div id="mascot-speech" class="bg-gray-900/90 border border-fuchsia-500/60 text-fuchsia-200 text-xs font-code p-3 rounded-2xl rounded-br-none shadow-[0_0_20px_rgba(217,70,239,0.3)] max-w-xs mb-2 hidden transition-all duration-300">
+            "Chào bạn! Tôi là Mèo Neon Cyber Cine-Bot."
+        </div>
+        
+        <!-- Cat Avatar Button -->
+        <div onclick="MascotLab.onClick()" class="mascot-avatar w-14 h-14 rounded-full bg-gradient-to-tr from-fuchsia-600 to-cyan-500 p-0.5 shadow-[0_0_25px_rgba(6,182,212,0.6)] cursor-pointer">
+            <div class="w-full h-full bg-black rounded-full flex items-center justify-center text-2xl text-cyan-300">
+                <i class="fas fa-cat" id="mascot-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SECRET TERMINAL MODAL (80s CRT CLI)        -->
+    <!-- ========================================== -->
+    <div id="terminal-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex-col items-center justify-center p-3 sm:p-6">
+        <div class="w-full max-w-3xl bg-black/95 rounded-2xl border-2 border-green-500/70 shadow-[0_0_50px_rgba(34,197,94,0.3)] overflow-hidden flex flex-col h-[75vh]">
+            <!-- Terminal Header -->
+            <div class="bg-green-950/80 px-4 py-2 border-b border-green-700/60 flex items-center justify-between text-xs text-green-300 font-terminal tracking-wider">
+                <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                    <span class="font-bold ml-2">CINE-OS v3.4.1 (SECRET TERMINAL ARCHIVE)</span>
+                </div>
+                <button onclick="TerminalLab.toggle()" class="text-green-400 hover:text-white text-base">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Terminal Output Area -->
+            <div id="terminal-output" class="flex-1 p-4 overflow-y-auto font-terminal text-green-400 text-lg sm:text-xl space-y-1 select-text">
+                <div>CHÀO MỪNG ĐẾN VỚI HỆ ĐIỀU HÀNH BÍ MẬT CỦA CINE-MANIA 3000.</div>
+                <div>Gõ <span class="text-yellow-300 font-bold">help</span> để xem danh sách lệnh được hỗ trợ.</div>
+            </div>
+
+            <!-- Terminal Input Prompt -->
+            <div class="bg-black border-t border-green-900/60 p-3 flex items-center space-x-2 font-terminal text-xl">
+                <span class="text-green-500 font-bold">user@cinemania:~$</span>
+                <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" class="flex-1 bg-transparent text-green-300 outline-none border-none font-terminal text-xl">
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- DYNAMIC CINEMATIC EVENT MODAL              -->
+    <!-- ========================================== -->
+    <div id="event-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl hidden flex-col items-center justify-center p-4">
+        <div class="max-w-2xl w-full bg-gray-900 border border-red-500/50 rounded-2xl p-6 relative shadow-[0_0_80px_rgba(239,68,68,0.4)] flex flex-col items-center text-center">
+            <button onclick="CinematicGenerator.closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modal-content-area" class="w-full">
+                <!-- Injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SECRET DEVELOPER ROOM MODAL                -->
+    <!-- ========================================== -->
+    <div id="dev-room-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl hidden flex-col items-center justify-center p-4">
+        <div class="max-w-3xl w-full bg-gray-950 border-2 border-yellow-500/60 rounded-2xl p-6 relative shadow-[0_0_80px_rgba(234,179,8,0.3)] max-h-[85vh] overflow-y-auto">
+            <button onclick="DevLab.close()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="flex items-center space-x-3 mb-4">
+                <i class="fas fa-key text-yellow-400 text-3xl"></i>
+                <div>
+                    <h2 class="text-xl font-bold text-yellow-400">SECRET DEVELOPER ROOM // DEBUG PORT</h2>
+                    <p class="text-xs text-gray-400">Cổng kiểm thử hậu trường và giám sát tiến trình hệ thống.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-code mb-6">
+                <div class="p-3 bg-gray-900 rounded-xl border border-gray-800">
+                    <span class="text-yellow-400 font-bold block mb-1">FPS & HIỆU NĂNG:</span>
+                    <div>FPS: <span id="dev-fps" class="text-green-400">60</span></div>
+                    <div>Active Particles: <span id="dev-particles" class="text-cyan-400">0</span></div>
+                </div>
+                <div class="p-3 bg-gray-900 rounded-xl border border-gray-800">
+                    <span class="text-yellow-400 font-bold block mb-1">EASTER EGG PROGRESS:</span>
+                    <div>Đã tìm thấy: <span id="dev-egg-count" class="text-yellow-300">0</span> / 15</div>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <h4 class="text-xs font-bold text-gray-300">CHỨC NĂNG CHEAT & KIỂM THỬ:</h4>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="DevLab.unlockAllSecrets()" class="px-3 py-1.5 rounded-lg bg-yellow-600 hover:bg-yellow-500 text-black font-bold text-xs">Mở Khóa Toàn Bộ Thành Tựu & Hồ Sơ</button>
+                    <button onclick="ChaosLab.triggerConfettiRain()" class="px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs">Bắn Pháo Giấy Test</button>
+                    <button onclick="AudioLab.playVictoryJingle()" class="px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs">Phát Victory Jingle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-20 right-6 z-50 bg-cyan-950/90 border border-cyan-500 text-cyan-200 px-5 py-3 rounded-2xl shadow-2xl font-code text-xs transform translate-y-28 opacity-0 transition-all duration-300 flex items-center space-x-3 pointer-events-none">
+        <i class="fas fa-magic text-yellow-400 text-base" id="toast-icon"></i>
+        <span id="toast-msg">Thông báo hệ thống!</span>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC & COMPLETE GAME ENGINES   -->
+    <!-- ========================================== -->
+    <script>
+        /* ==================================================
+         * 1. AUDIO ENGINE (Web Audio API - Fully Synthesized)
+         * ================================================== */
+        const AudioLab = (() => {
+            let audioCtx = null;
+            let soundEnabled = true;
+            let masterVolume = 0.8;
+            let ambientOsc1 = null, ambientOsc2 = null, ambientGain = null;
+            let isAmbientPlaying = false;
+
+            function init() {
+                if (!audioCtx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContextClass) {
+                        audioCtx = new AudioContextClass();
+                    }
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            }
+
+            function toggleSound() {
+                soundEnabled = !soundEnabled;
+                const icon = document.getElementById('sound-icon');
+                const text = document.getElementById('sound-text');
+                if (soundEnabled) {
+                    icon.className = 'fas fa-volume-up';
+                    text.innerText = 'Âm Thanh: Bật';
+                    App.showToast('Âm thanh đã BẬT 🔊');
+                } else {
+                    icon.className = 'fas fa-volume-mute';
+                    text.innerText = 'Âm Thanh: Tắt';
+                    if (isAmbientPlaying) stopAmbient();
+                    App.showToast('Âm thanh đã TẮT 🔇');
+                }
+            }
+
+            function playTone(freq, type = 'sine', duration = 0.2, volume = 0.1) {
+                if (!soundEnabled) return;
+                try {
+                    init();
+                    if (!audioCtx) return;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(volume * masterVolume, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + duration);
+                } catch (e) {
+                    console.warn("Audio playTone failed:", e);
+                }
+            }
+
+            function playNote(freq) {
+                playTone(freq, 'sawtooth', 0.35, 0.15);
+                ProgressManager.unlockAchievement('sound_artist');
+            }
+
+            function playPresetSFX(type) {
+                if (!soundEnabled) return;
+                init();
+                if (!audioCtx) return;
+                const t = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                gain.connect(audioCtx.destination);
+
+                if (type === 'laser') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(880, t);
+                    osc.frequency.exponentialRampToValueAtTime(110, t + 0.25);
+                    gain.gain.setValueAtTime(0.15 * masterVolume, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+                    osc.connect(gain);
+                    osc.start(t);
+                    osc.stop(t + 0.25);
+                } else if (type === 'coin') {
+                    playTone(987.77, 'square', 0.1, 0.1);
+                    setTimeout(() => playTone(1318.51, 'square', 0.2, 0.1), 100);
+                } else if (type === 'explosion') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(120, t);
+                    osc.frequency.exponentialRampToValueAtTime(30, t + 0.5);
+                    gain.gain.setValueAtTime(0.3 * masterVolume, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+                    osc.connect(gain);
+                    osc.start(t);
+                    osc.stop(t + 0.5);
+                } else if (type === 'teleport') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(200, t);
+                    osc.frequency.exponentialRampToValueAtTime(1200, t + 0.3);
+                    gain.gain.setValueAtTime(0.12 * masterVolume, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                    osc.connect(gain);
+                    osc.start(t);
+                    osc.stop(t + 0.3);
+                } else if (type === 'glitch') {
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(() => {
+                            playTone(Math.random() * 800 + 200, 'square', 0.05, 0.08);
+                        }, i * 40);
+                    }
+                }
+            }
+
+            function playRandomMelody() {
+                const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 523.25];
+                for (let i = 0; i < 6; i++) {
+                    setTimeout(() => {
+                        const note = notes[Math.floor(Math.random() * notes.length)];
+                        playTone(note, 'triangle', 0.2, 0.12);
+                    }, i * 160);
+                }
+            }
+
+            function playVictoryJingle() {
+                if (!soundEnabled) return;
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((note, idx) => {
+                    setTimeout(() => playTone(note, 'square', 0.3, 0.12), idx * 140);
+                });
+            }
+
+            function playAlarmSound() {
+                if (!soundEnabled) return;
+                for (let i = 0; i < 4; i++) {
+                    setTimeout(() => playTone(800 - (i * 100), 'sawtooth', 0.15, 0.15), i * 150);
+                }
+            }
+
+            function toggleAmbient() {
+                if (isAmbientPlaying) {
+                    stopAmbient();
+                    document.getElementById('ambient-btn').innerText = 'BẬT';
+                    App.showToast('Đã dừng tiếng ồn vũ trụ');
+                } else {
+                    startAmbient();
+                    document.getElementById('ambient-btn').innerText = 'TẮT';
+                    App.showToast('Đã bật tiếng ồn vũ trụ 🌌');
+                }
+            }
+
+            function startAmbient() {
+                if (!soundEnabled) return;
+                init();
+                if (!audioCtx) return;
+                ambientOsc1 = audioCtx.createOscillator();
+                ambientOsc2 = audioCtx.createOscillator();
+                ambientGain = audioCtx.createGain();
+
+                ambientOsc1.type = 'sine';
+                ambientOsc1.frequency.setValueAtTime(55, audioCtx.currentTime); // A1
+                ambientOsc2.type = 'sine';
+                ambientOsc2.frequency.setValueAtTime(55.8, audioCtx.currentTime); // Binaural beat
+
+                ambientGain.gain.setValueAtTime(0.04 * masterVolume, audioCtx.currentTime);
+
+                ambientOsc1.connect(ambientGain);
+                ambientOsc2.connect(ambientGain);
+                ambientGain.connect(audioCtx.destination);
+
+                ambientOsc1.start();
+                ambientOsc2.start();
+                isAmbientPlaying = true;
+            }
+
+            function stopAmbient() {
+                if (ambientOsc1) { ambientOsc1.stop(); ambientOsc1.disconnect(); }
+                if (ambientOsc2) { ambientOsc2.stop(); ambientOsc2.disconnect(); }
+                isAmbientPlaying = false;
+            }
+
+            function setMasterVolume(val) {
+                masterVolume = parseFloat(val);
+                document.getElementById('volume-val-display').innerText = `${Math.round(masterVolume * 100)}%`;
+                if (ambientGain && audioCtx) {
+                    ambientGain.gain.setValueAtTime(0.04 * masterVolume, audioCtx.currentTime);
+                }
+            }
+
+            return {
+                init, toggleSound, playTone, playNote, playPresetSFX,
+                playRandomMelody, playVictoryJingle, playAlarmSound,
+                toggleAmbient, setMasterVolume
+            };
+        })();
+
+        /* ==================================================
+         * 2. BACKGROUND & MATRIX CANVAS ENGINE
+         * ================================================== */
+        const BgCanvasEngine = (() => {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let drops = [];
+            let matrixMode = false;
+            const matrixChars = "010101 CINE MANIA EASTER EGG MOVIE STAR 🎬🍿🚀⭐";
+            let animId = null;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+            }
+
+            function initParticles(density = 80) {
+                particles = [];
+                const count = Math.floor((canvas.width * canvas.height) / (160000 / density));
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 2 + 0.5,
+                        color: Math.random() > 0.5 ? '#00e5ff' : '#d946ef',
+                        vx: (Math.random() - 0.5) * 0.6,
+                        vy: (Math.random() - 0.5) * 0.6
+                    });
+                }
+                const columns = Math.floor(canvas.width / 20);
+                drops = [];
+                for (let i = 0; i < columns; i++) {
+                    drops[i] = Math.random() * -100;
+                }
+            }
+
+            function loop() {
+                const speed = ChaosLab.timeWarp;
+                const grav = ChaosLab.gravity;
+                const magnet = ChaosLab.magnetic;
+                const mouse = ChaosLab.mousePos;
+
+                if (!matrixMode) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    particles.forEach(p => {
+                        // Apply Gravity Mode
+                        if (grav === 'down') p.vy += 0.05 * speed;
+                        else if (grav === 'up') p.vy -= 0.05 * speed;
+                        else if (grav === 'center') {
+                            const dx = canvas.width / 2 - p.x;
+                            const dy = canvas.height / 2 - p.y;
+                            p.vx += dx * 0.0001 * speed;
+                            p.vy += dy * 0.0001 * speed;
+                        }
+
+                        // Apply Magnetic Cursor
+                        if (magnet !== 'none' && mouse.x !== null) {
+                            const dx = mouse.x - p.x;
+                            const dy = mouse.y - p.y;
+                            const dist = Math.hypot(dx, dy);
+                            if (dist < 200 && dist > 1) {
+                                const force = (magnet === 'attract' ? 1 : -1) * (200 - dist) / 200 * 0.3 * speed;
+                                p.vx += (dx / dist) * force;
+                                p.vy += (dy / dist) * force;
+                            }
+                        }
+
+                        p.x += p.vx * speed;
+                        p.y += p.vy * speed;
+
+                        // Friction when moving fast
+                        p.vx *= 0.99;
+                        p.vy *= 0.99;
+
+                        // Wrap edges
+                        if (p.x < 0) p.x = canvas.width;
+                        if (p.x > canvas.width) p.x = 0;
+                        if (p.y < 0) p.y = canvas.height;
+                        if (p.y > canvas.height) p.y = 0;
+
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = p.color;
+                        ctx.fill();
+                    });
+                } else {
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = "#00ff66";
+                    ctx.font = "14px Fira Code";
+
+                    for (let i = 0; i < drops.length; i++) {
+                        const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                        ctx.fillText(text, i * 20, drops[i] * 20);
+                        if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
+                            drops[i] = 0;
+                        }
+                        drops[i] += 1 * speed;
+                    }
+                }
+
+                DevLab.updateParticleCount(particles.length);
+                animId = requestAnimationFrame(loop);
+            }
+
+            function toggleMatrix(forceState) {
+                matrixMode = (forceState !== undefined) ? forceState : !matrixMode;
+                if (matrixMode) {
+                    App.showToast('Đã kích hoạt Ma Trận Điện Ảnh! 🟢', 'fa-terminal');
+                    document.getElementById('status-tag').innerText = '[MODE: MATRIX RAIN]';
+                    ProgressManager.unlockAchievement('matrix_init');
+                } else {
+                    App.showToast('Đã tắt Ma Trận! 🌌', 'fa-moon');
+                    document.getElementById('status-tag').innerText = '[MODE: NORMAL CINEMA]';
+                }
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            loop();
+
+            return { toggleMatrix, initParticles, isMatrix: () => matrixMode };
+        })();
+
+        /* ==================================================
+         * 3. SPECIAL EFFECTS & FIREWORKS CANVAS ENGINE
+         * ================================================== */
+        const FXEngine = (() => {
+            const canvas = document.getElementById('fx-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function createFirework(x, y, count = 50) {
+                const colors = ['#ff0055', '#00e5ff', '#ffbe0b', '#8338ec', '#3a86ff'];
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 6 + 2;
+                    particles.push({
+                        x, y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        alpha: 1,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        radius: Math.random() * 3 + 1,
+                        decay: Math.random() * 0.02 + 0.015
+                    });
+                }
+            }
+
+            function createConfettiBurst(x, y, count = 60) {
+                const colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x, y,
+                        vx: (Math.random() - 0.5) * 8,
+                        vy: Math.random() * -8 - 2,
+                        alpha: 1,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        radius: Math.random() * 4 + 2,
+                        isConfetti: true,
+                        rotation: Math.random() * 360,
+                        decay: 0.012
+                    });
+                }
+            }
+
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.isConfetti) {
+                        p.vy += 0.15; // Gravity
+                        p.rotation += 5;
+                    }
+                    p.alpha -= p.decay;
+
+                    if (p.alpha <= 0) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+                requestAnimationFrame(loop);
+            }
+            loop();
+
+            return { createFirework, createConfettiBurst };
+        })();
+
+        /* ==================================================
+         * 4. CHAOS CONTROL CENTER MANAGER
+         * ================================================== */
+        const ChaosLab = (() => {
+            let gravity = 'none';
+            let timeWarp = 1.0;
+            let magnetic = 'none';
+            let mousePos = { x: null, y: null };
+            let isBigHead = false;
+            let isInvisible = false;
+            let isRainbow = false;
+
+            window.addEventListener('mousemove', (e) => {
+                mousePos.x = e.clientX;
+                mousePos.y = e.clientY;
+            });
+
+            function setGravity(mode) {
+                gravity = mode;
+                document.getElementById('chaos-tag-gravity').innerText = mode.toUpperCase();
+                App.showToast(`Trọng lực hạt: ${mode.toUpperCase()}`);
+                checkChaosCount();
+            }
+
+            function setTimeWarp(val) {
+                timeWarp = parseFloat(val);
+                document.getElementById('chaos-val-time').innerText = `${timeWarp.toFixed(1)}x`;
+                checkChaosCount();
+            }
+
+            function setMagnetic(mode) {
+                magnetic = mode;
+                App.showToast(`Chuột từ tính: ${mode.toUpperCase()} 🧲`);
+                checkChaosCount();
+            }
+
+            function setShake(level) {
+                const body = document.getElementById('main-body');
+                body.classList.remove('shake-light', 'shake-heavy');
+                if (level === 'light') body.classList.add('shake-light');
+                else if (level === 'heavy') body.classList.add('shake-heavy');
+                AudioLab.playPresetSFX('explosion');
+                checkChaosCount();
+            }
+
+            function toggleInvert() {
+                document.getElementById('main-body').classList.toggle('filter-inverted');
+                checkChaosCount();
+            }
+
+            function toggleMirror() {
+                document.getElementById('main-body').classList.toggle('filter-mirror');
+                checkChaosCount();
+            }
+
+            function setZoom(val) {
+                document.getElementById('viewport-wrapper').style.transform = `scale(${val})`;
+                document.getElementById('chaos-val-zoom').innerText = `${parseFloat(val).toFixed(2)}x`;
+            }
+
+            function toggleBigHead() {
+                isBigHead = !isBigHead;
+                document.getElementById('main-body').classList.toggle('filter-bighead', isBigHead);
+                App.showToast(isBigHead ? 'Chế độ Đầu To Bật 🤖' : 'Đầu to đã tắt');
+            }
+
+            function toggleInvisibility() {
+                isInvisible = !isInvisible;
+                document.getElementById('main-body').classList.toggle('filter-invisible-cards', isInvisible);
+                App.showToast(isInvisible ? 'Các thẻ đã tàng hình! 👻' : 'Thẻ đã hiện lại');
+            }
+
+            function toggleRainbow() {
+                isRainbow = !isRainbow;
+                document.getElementById('main-body').classList.toggle('filter-rainbow', isRainbow);
+            }
+
+            function triggerGlitchPulse() {
+                AudioLab.playPresetSFX('glitch');
+                const title = document.getElementById('main-title');
+                title.classList.add('is-glitching');
+                document.getElementById('main-body').classList.add('shake-heavy');
+                setTimeout(() => {
+                    title.classList.remove('is-glitching');
+                    document.getElementById('main-body').classList.remove('shake-heavy');
+                }, 600);
+                App.showToast('Bẻ cong thực tại: Glitch Wave ⚡');
+            }
+
+            function triggerConfettiRain() {
+                AudioLab.playVictoryJingle();
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        FXEngine.createConfettiBurst(Math.random() * window.innerWidth, window.innerHeight * 0.3);
+                    }, i * 150);
+                }
+            }
+
+            function resetChaos() {
+                gravity = 'none';
+                timeWarp = 1.0;
+                magnetic = 'none';
+                isBigHead = false;
+                isInvisible = false;
+                isRainbow = false;
+                document.getElementById('chaos-select-gravity').value = 'none';
+                document.getElementById('chaos-tag-gravity').innerText = 'TẮT';
+                document.getElementById('chaos-val-time').innerText = '1.0x';
+                document.getElementById('viewport-wrapper').style.transform = 'scale(1)';
+                document.getElementById('chaos-val-zoom').innerText = '1.0x';
+                const body = document.getElementById('main-body');
+                body.classList.remove('shake-light', 'shake-heavy', 'filter-inverted', 'filter-mirror', 'filter-bighead', 'filter-invisible-cards', 'filter-rainbow');
+                App.showToast('Đã khôi phục toàn bộ Chaos về mặc định 🔄');
+            }
+
+            function checkChaosCount() {
+                let count = 0;
+                if (gravity !== 'none') count++;
+                if (timeWarp !== 1.0) count++;
+                if (magnetic !== 'none') count++;
+                if (count >= 3) {
+                    ProgressManager.unlockAchievement('chaos_master');
+                }
+            }
+
+            return {
+                get gravity() { return gravity; },
+                get timeWarp() { return timeWarp; },
+                get magnetic() { return magnetic; },
+                get mousePos() { return mousePos; },
+                setGravity, setTimeWarp, setMagnetic, setShake,
+                toggleInvert, toggleMirror, setZoom, toggleBigHead,
+                toggleInvisibility, toggleRainbow, triggerGlitchPulse,
+                triggerConfettiRain, resetChaos
+            };
+        })();
+
+        /* ==================================================
+         * 5. TOYBOX ENGINE (Sandbox, Painter, BlackHole, Fidget)
+         * ================================================== */
+        const ToyboxLab = (() => {
+            let activeToy = 'sandbox';
+
+            // --- Sub-toy 1: Gravity Sandbox ---
+            let sbCanvas, sbCtx, sbBalls = [], sbAntiGrav = false, sbAnim = null;
+            let isDraggingBall = null;
+
+            function initSandbox() {
+                sbCanvas = document.getElementById('sandbox-canvas');
+                if (!sbCanvas) return;
+                sbCtx = sbCanvas.getContext('2d');
+                sbCanvas.width = sbCanvas.parentElement.clientWidth;
+                sbCanvas.height = sbCanvas.parentElement.clientHeight;
+                sbBalls = [];
+                spawnBalls(6);
+
+                sbCanvas.onmousedown = (e) => {
+                    const rect = sbCanvas.getBoundingClientRect();
+                    const mx = e.clientX - rect.left;
+                    const my = e.clientY - rect.top;
+                    // Check if clicked an existing ball
+                    for (let b of sbBalls) {
+                        if (Math.hypot(b.x - mx, b.y - my) < b.r) {
+                            isDraggingBall = b;
+                            return;
+                        }
+                    }
+                    // Spawn new ball
+                    sbBalls.push({
+                        x: mx, y: my, vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6,
+                        r: Math.random() * 12 + 10,
+                        color: ['#00e5ff', '#d946ef', '#facc15', '#10b981'][Math.floor(Math.random() * 4)],
+                        bounce: 0.75
+                    });
+                    AudioLab.playTone(350, 'sine', 0.08, 0.08);
+                };
+
+                window.onmousemove = (e) => {
+                    if (isDraggingBall && sbCanvas) {
+                        const rect = sbCanvas.getBoundingClientRect();
+                        isDraggingBall.x = e.clientX - rect.left;
+                        isDraggingBall.y = e.clientY - rect.top;
+                        isDraggingBall.vx = 0;
+                        isDraggingBall.vy = 0;
+                    }
+                };
+
+                window.onmouseup = () => { isDraggingBall = null; };
+
+                if (!sbAnim) runSandboxLoop();
+            }
+
+            function spawnBalls(n = 5) {
+                if (!sbCanvas) return;
+                for (let i = 0; i < n; i++) {
+                    sbBalls.push({
+                        x: Math.random() * (sbCanvas.width - 40) + 20,
+                        y: Math.random() * 80 + 20,
+                        vx: (Math.random() - 0.5) * 6,
+                        vy: Math.random() * 3,
+                        r: Math.random() * 12 + 10,
+                        color: ['#00e5ff', '#d946ef', '#facc15', '#10b981'][Math.floor(Math.random() * 4)],
+                        bounce: 0.75
+                    });
+                }
+            }
+
+            function toggleAntiGravity() {
+                sbAntiGrav = !sbAntiGrav;
+                document.getElementById('toy-antigrav-btn').innerText = `Chống Trọng Lực: ${sbAntiGrav ? 'BẬT 🚀' : 'TẮT'}`;
+            }
+
+            function clearSandbox() {
+                sbBalls = [];
+            }
+
+            function runSandboxLoop() {
+                if (!sbCanvas) return;
+                sbCtx.clearRect(0, 0, sbCanvas.width, sbCanvas.height);
+                const g = sbAntiGrav ? -0.2 : 0.35;
+
+                for (let b of sbBalls) {
+                    if (b !== isDraggingBall) {
+                        b.vy += g;
+                        b.x += b.vx;
+                        b.y += b.vy;
+
+                        // Wall collisions
+                        if (b.x + b.r > sbCanvas.width) { b.x = sbCanvas.width - b.r; b.vx *= -b.bounce; }
+                        if (b.x - b.r < 0) { b.x = b.r; b.vx *= -b.bounce; }
+                        if (b.y + b.r > sbCanvas.height) { b.y = sbCanvas.height - b.r; b.vy *= -b.bounce; }
+                        if (b.y - b.r < 0) { b.y = b.r; b.vy *= -b.bounce; }
+                    }
+
+                    sbCtx.beginPath();
+                    sbCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                    sbCtx.fillStyle = b.color;
+                    sbCtx.shadowColor = b.color;
+                    sbCtx.shadowBlur = 10;
+                    sbCtx.fill();
+                    sbCtx.shadowBlur = 0;
+                }
+
+                sbAnim = requestAnimationFrame(runSandboxLoop);
+            }
+
+            // --- Sub-toy 2: Particle Painter ---
+            let ptCanvas, ptCtx, isPainting = false;
+
+            function initPainter() {
+                ptCanvas = document.getElementById('painter-canvas');
+                if (!ptCanvas) return;
+                ptCtx = ptCanvas.getContext('2d');
+                ptCanvas.width = ptCanvas.parentElement.clientWidth;
+                ptCanvas.height = ptCanvas.parentElement.clientHeight;
+
+                ptCanvas.onmousedown = (e) => { isPainting = true; paint(e); };
+                window.onmouseup = () => { isPainting = false; };
+                ptCanvas.onmousemove = paint;
+
+                // Touch support
+                ptCanvas.ontouchstart = (e) => { isPainting = true; paintTouch(e); };
+                window.ontouchend = () => { isPainting = false; };
+                ptCanvas.ontouchmove = paintTouch;
+            }
+
+            function paint(e) {
+                if (!isPainting || !ptCanvas) return;
+                const rect = ptCanvas.getBoundingClientRect();
+                drawBrush(e.clientX - rect.left, e.clientY - rect.top);
+            }
+
+            function paintTouch(e) {
+                if (!isPainting || !ptCanvas || !e.touches[0]) return;
+                const rect = ptCanvas.getBoundingClientRect();
+                drawBrush(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+            }
+
+            function drawBrush(x, y) {
+                const type = document.getElementById('painter-brush').value;
+                const size = parseInt(document.getElementById('painter-size').value, 10);
+
+                ptCtx.save();
+                if (type === 'neon') {
+                    ptCtx.beginPath();
+                    ptCtx.arc(x, y, size, 0, Math.PI * 2);
+                    ptCtx.fillStyle = '#00e5ff';
+                    ptCtx.shadowColor = '#00e5ff';
+                    ptCtx.shadowBlur = 15;
+                    ptCtx.fill();
+                } else if (type === 'fire') {
+                    ptCtx.beginPath();
+                    ptCtx.arc(x + (Math.random() - 0.5) * 8, y + (Math.random() - 0.5) * 8, size * 0.8, 0, Math.PI * 2);
+                    ptCtx.fillStyle = Math.random() > 0.5 ? '#f97316' : '#ef4444';
+                    ptCtx.shadowColor = '#f97316';
+                    ptCtx.shadowBlur = 10;
+                    ptCtx.fill();
+                } else if (type === 'stars') {
+                    ptCtx.font = `${size * 1.5}px monospace`;
+                    ptCtx.fillStyle = '#facc15';
+                    ptCtx.fillText('★', x, y);
+                } else if (type === 'rainbow') {
+                    ptCtx.beginPath();
+                    ptCtx.arc(x, y, size, 0, Math.PI * 2);
+                    ptCtx.fillStyle = `hsl(${Date.now() / 5 % 360}, 100%, 60%)`;
+                    ptCtx.fill();
+                }
+                ptCtx.restore();
+            }
+
+            function clearPainter() {
+                if (ptCanvas) ptCtx.clearRect(0, 0, ptCanvas.width, ptCanvas.height);
+            }
+
+            function savePainting() {
+                if (!ptCanvas) return;
+                const a = document.createElement('a');
+                a.download = `cinemania-art-${Date.now()}.png`;
+                a.href = ptCanvas.toDataURL();
+                a.click();
+                App.showToast('Đã tải kiệt tác hội họa về máy! 🖼️');
+            }
+
+            // --- Sub-toy 3: Black Hole Lab ---
+            let bhCanvas, bhCtx, bhParticles = [], bhHoles = [], bhType = 'attract', bhAnim = null;
+
+            function initBlackHole() {
+                bhCanvas = document.getElementById('blackhole-canvas');
+                if (!bhCanvas) return;
+                bhCtx = bhCanvas.getContext('2d');
+                bhCanvas.width = bhCanvas.parentElement.clientWidth;
+                bhCanvas.height = bhCanvas.parentElement.clientHeight;
+                bhParticles = [];
+                for (let i = 0; i < 200; i++) {
+                    bhParticles.push({
+                        x: Math.random() * bhCanvas.width,
+                        y: Math.random() * bhCanvas.height,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: (Math.random() - 0.5) * 2
+                    });
+                }
+                bhCanvas.onclick = (e) => {
+                    const rect = bhCanvas.getBoundingClientRect();
+                    bhHoles.push({
+                        x: e.clientX - rect.left,
+                        y: e.clientY - rect.top,
+                        type: bhType,
+                        r: 15
+                    });
+                    AudioLab.playPresetSFX('teleport');
+                };
+
+                if (!bhAnim) runBlackHoleLoop();
+            }
+
+            function setHoleType(t) {
+                bhType = t;
+                document.getElementById('hole-type-attract').className = t === 'attract' ? 'px-3 py-1 bg-purple-700 text-white rounded' : 'px-3 py-1 bg-gray-800 text-gray-400 rounded';
+                document.getElementById('hole-type-repel').className = t === 'repel' ? 'px-3 py-1 bg-purple-700 text-white rounded' : 'px-3 py-1 bg-gray-800 text-gray-400 rounded';
+            }
+
+            function clearHoles() {
+                bhHoles = [];
+            }
+
+            function runBlackHoleLoop() {
+                if (!bhCanvas) return;
+                bhCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                bhCtx.fillRect(0, 0, bhCanvas.width, bhCanvas.height);
+
+                // Draw holes
+                for (let h of bhHoles) {
+                    bhCtx.beginPath();
+                    bhCtx.arc(h.x, h.y, h.r, 0, Math.PI * 2);
+                    bhCtx.fillStyle = h.type === 'attract' ? '#a855f7' : '#06b6d4';
+                    bhCtx.shadowColor = bhCtx.fillStyle;
+                    bhCtx.shadowBlur = 20;
+                    bhCtx.fill();
+                    bhCtx.shadowBlur = 0;
+                }
+
+                // Update particles
+                for (let p of bhParticles) {
+                    for (let h of bhHoles) {
+                        const dx = h.x - p.x;
+                        const dy = h.y - p.y;
+                        const d = Math.hypot(dx, dy);
+                        if (d > 5) {
+                            const f = (h.type === 'attract' ? 1 : -1) * (150 / (d * d + 100));
+                            p.vx += (dx / d) * f;
+                            p.vy += (dy / d) * f;
+                        }
+                    }
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.98;
+                    p.vy *= 0.98;
+
+                    if (p.x < 0) p.x = bhCanvas.width;
+                    if (p.x > bhCanvas.width) p.x = 0;
+                    if (p.y < 0) p.y = bhCanvas.height;
+                    if (p.y > bhCanvas.height) p.y = 0;
+
+                    bhCtx.beginPath();
+                    bhCtx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+                    bhCtx.fillStyle = '#ffffff';
+                    bhCtx.fill();
+                }
+
+                bhAnim = requestAnimationFrame(runBlackHoleLoop);
+            }
+
+            // --- Sub-toy 4: Fidget Toys ---
+            let isMechSwitchOn = true;
+            let spinnerRPM = 0, spinnerRot = 0, spinnerDecel = null;
+
+            function toggleMechanicalSwitch() {
+                isMechSwitchOn = !isMechSwitchOn;
+                const lever = document.getElementById('fidget-mech-lever');
+                const stat = document.getElementById('fidget-switch-status');
+                if (isMechSwitchOn) {
+                    lever.style.transform = 'translateY(0)';
+                    stat.innerText = 'TRẠNG THÁI: ON';
+                    AudioLab.playTone(600, 'square', 0.05, 0.2);
+                } else {
+                    lever.style.transform = 'translateY(55px)';
+                    stat.innerText = 'TRẠNG THÁI: OFF';
+                    AudioLab.playTone(300, 'square', 0.05, 0.2);
+                }
+            }
+
+            function spinFidgetSpinner() {
+                spinnerRPM += 120;
+                AudioLab.playTone(400 + Math.min(spinnerRPM, 800), 'triangle', 0.1, 0.1);
+                if (!spinnerDecel) {
+                    spinnerDecel = setInterval(() => {
+                        spinnerRot += spinnerRPM * 0.05;
+                        document.getElementById('spinner-disc').style.transform = `rotate(${spinnerRot}deg)`;
+                        document.getElementById('spinner-rpm').innerText = `${Math.round(spinnerRPM)} RPM`;
+                        spinnerRPM *= 0.95;
+                        if (spinnerRPM < 2) {
+                            spinnerRPM = 0;
+                            clearInterval(spinnerDecel);
+                            spinnerDecel = null;
+                            document.getElementById('spinner-rpm').innerText = '0 RPM';
+                        }
+                    }, 30);
+                }
+            }
+
+            function onSpringSlider(input) {
+                AudioLab.playTone(150 + parseInt(input.value, 10) * 4, 'sine', 0.03, 0.05);
+            }
+
+            function releaseSpringSlider(input) {
+                input.value = 50;
+                AudioLab.playPresetSFX('laser');
+            }
+
+            function openMysteryBox() {
+                const surprises = ['🎬 Cuộn Phim Vàng', '⭐ Sao Không Gian', '🐱 Mèo Thần Tài', '🍿 Bỏng Ngô 4D', '💎 Kim Cương Cyber', '👾 Quái Vật 8-bit'];
+                const item = surprises[Math.floor(Math.random() * surprises.length)];
+                document.getElementById('mystery-box-label').innerText = item;
+                FXEngine.createConfettiBurst(window.innerWidth / 2, window.innerHeight / 2, 25);
+                AudioLab.playPresetSFX('coin');
+            }
+
+            function switchToy(toy) {
+                activeToy = toy;
+                document.querySelectorAll('.toy-panel').forEach(p => p.classList.add('hidden'));
+                document.querySelectorAll('[id^="subtoy-btn-"]').forEach(b => {
+                    b.className = 'px-4 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800';
+                });
+
+                document.getElementById(`toy-panel-${toy}`).classList.remove('hidden');
+                document.getElementById(`subtoy-btn-${toy}`).className = 'px-4 py-1.5 text-xs rounded-xl bg-yellow-500/20 text-yellow-300 border border-yellow-500/50';
+
+                if (toy === 'sandbox') initSandbox();
+                else if (toy === 'painter') initPainter();
+                else if (toy === 'blackhole') initBlackHole();
+
+                ProgressManager.unlockAchievement('toybox_hero');
+            }
+
+            return {
+                switchToy, spawnBalls, toggleAntiGravity, clearSandbox,
+                clearPainter, savePainting, setHoleType, clearHoles,
+                toggleMechanicalSwitch, spinFidgetSpinner, onSpringSlider,
+                releaseSpringSlider, openMysteryBox
+            };
+        })();
+
+        /* ==================================================
+         * 6. ARCADE ENGINE (Asteroids, Pong, Memory, CodeBreaker, Reaction)
+         * ================================================== */
+        const ArcadeLab = (() => {
+            // --- Game 1: Dodge Asteroids ---
+            let astCanvas, astCtx, astLoopId = null, astRunning = false, astScore = 0;
+            let astPlayer = { x: 50, y: 100, r: 14 };
+            let astObstacles = [], astPickups = [];
+
+            function initAsteroidsCanvas() {
+                const c1 = document.getElementById('minigame-canvas');
+                const c2 = document.getElementById('arc-dodge-canvas');
+                astCanvas = (App.currentTab === 'arcade') ? c2 : c1;
+                if (!astCanvas) return;
+                astCtx = astCanvas.getContext('2d');
+                astCanvas.width = astCanvas.parentElement.clientWidth;
+                astCanvas.height = astCanvas.parentElement.clientHeight;
+                astPlayer.x = 45;
+                astPlayer.y = astCanvas.height / 2;
+
+                const onMove = (clientY) => {
+                    if (!astRunning) return;
+                    const rect = astCanvas.getBoundingClientRect();
+                    astPlayer.y = clientY - rect.top;
+                };
+
+                astCanvas.parentElement.onmousemove = (e) => onMove(e.clientY);
+                astCanvas.parentElement.ontouchmove = (e) => {
+                    if (e.touches[0]) onMove(e.touches[0].clientY);
+                };
+            }
+
+            function startAsteroidsGame() {
+                initAsteroidsCanvas();
+                if (astLoopId) cancelAnimationFrame(astLoopId);
+                document.getElementById('game-start-overlay').classList.add('hidden');
+                document.getElementById('arc-dodge-overlay').classList.add('hidden');
+                astRunning = true;
+                astScore = 0;
+                astObstacles = [];
+                astPickups = [];
+                updateAsteroidScoreUI();
+                astGameLoop();
+                App.showToast('Né thiên thạch đỏ, nhặt cuộn phim vàng! 🚀');
+            }
+
+            function astGameLoop() {
+                if (!astRunning) return;
+                astCtx.clearRect(0, 0, astCanvas.width, astCanvas.height);
+
+                // Draw Player Reel
+                astCtx.save();
+                astCtx.beginPath();
+                astCtx.arc(astPlayer.x, astPlayer.y, astPlayer.r, 0, Math.PI * 2);
+                astCtx.fillStyle = '#00e5ff';
+                astCtx.shadowColor = '#00e5ff';
+                astCtx.shadowBlur = 12;
+                astCtx.fill();
+                astCtx.restore();
+
+                // Spawn Obstacles
+                if (Math.random() < 0.05) {
+                    astObstacles.push({
+                        x: astCanvas.width + 20,
+                        y: Math.random() * astCanvas.height,
+                        r: Math.random() * 10 + 9,
+                        speed: Math.random() * 3 + 2.5
+                    });
+                }
+
+                // Spawn Pickups
+                if (Math.random() < 0.015) {
+                    astPickups.push({
+                        x: astCanvas.width + 20,
+                        y: Math.random() * astCanvas.height,
+                        r: 8,
+                        speed: 3
+                    });
+                }
+
+                // Update & Draw Pickups
+                for (let i = astPickups.length - 1; i >= 0; i--) {
+                    const p = astPickups[i];
+                    p.x -= p.speed;
+                    astCtx.beginPath();
+                    astCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    astCtx.fillStyle = '#facc15';
+                    astCtx.fill();
+
+                    if (Math.hypot(astPlayer.x - p.x, astPlayer.y - p.y) < astPlayer.r + p.r) {
+                        astPickups.splice(i, 1);
+                        astScore += 50;
+                        AudioLab.playPresetSFX('coin');
+                        updateAsteroidScoreUI();
+                    } else if (p.x < -20) {
+                        astPickups.splice(i, 1);
+                    }
+                }
+
+                // Update & Draw Obstacles
+                for (let i = astObstacles.length - 1; i >= 0; i--) {
+                    const obs = astObstacles[i];
+                    obs.x -= obs.speed;
+
+                    astCtx.beginPath();
+                    astCtx.arc(obs.x, obs.y, obs.r, 0, Math.PI * 2);
+                    astCtx.fillStyle = '#ef4444';
+                    astCtx.fill();
+
+                    // Collision check
+                    if (Math.hypot(astPlayer.x - obs.x, astPlayer.y - obs.y) < astPlayer.r + obs.r) {
+                        endAsteroidsGame();
+                        return;
+                    }
+
+                    if (obs.x < -20) {
+                        astObstacles.splice(i, 1);
+                        astScore += 10;
+                        updateAsteroidScoreUI();
+                    }
+                }
+
+                astLoopId = requestAnimationFrame(astGameLoop);
+            }
+
+            function endAsteroidsGame() {
+                astRunning = false;
+                if (astLoopId) cancelAnimationFrame(astLoopId);
+                AudioLab.playAlarmSound();
+                App.showToast(`Game Over! Điểm số: ${astScore} 💥`);
+                document.getElementById('game-start-overlay').classList.remove('hidden');
+                document.getElementById('arc-dodge-overlay').classList.remove('hidden');
+
+                const best = Math.max(astScore, ProgressManager.data.asteroidBest || 0);
+                ProgressManager.data.asteroidBest = best;
+                ProgressManager.save();
+                updateAsteroidScoreUI();
+
+                if (astScore >= 100) {
+                    SecretLab.unlockEgg('arcade_high_score', 'Cao Thủ Phi Công Không Gian');
+                }
+            }
+
+            function updateAsteroidScoreUI() {
+                document.getElementById('game-score').innerText = astScore;
+                document.getElementById('arc-dodge-score').innerText = astScore;
+                const b = ProgressManager.data.asteroidBest || 0;
+                document.getElementById('game-best-score').innerText = b;
+                document.getElementById('arc-dodge-best').innerText = b;
+            }
+
+            // --- Game 2: Neon Pong ---
+            let pongCanvas, pongCtx, pongLoopId = null, pongRunning = false;
+            let p1Y = 100, aiY = 100, ball = { x: 200, y: 150, vx: 4, vy: 3, r: 7 };
+            let p1Score = 0, aiScore = 0;
+
+            function initPong() {
+                pongCanvas = document.getElementById('pong-canvas');
+                if (!pongCanvas) return;
+                pongCtx = pongCanvas.getContext('2d');
+                pongCanvas.width = pongCanvas.parentElement.clientWidth;
+                pongCanvas.height = pongCanvas.parentElement.clientHeight;
+
+                pongCanvas.parentElement.onmousemove = (e) => {
+                    const rect = pongCanvas.getBoundingClientRect();
+                    p1Y = e.clientY - rect.top - 30;
+                };
+            }
+
+            function startPongGame() {
+                initPong();
+                document.getElementById('pong-overlay').classList.add('hidden');
+                p1Score = 0; aiScore = 0;
+                updatePongUI();
+                resetPongBall();
+                pongRunning = true;
+                pongLoop();
+            }
+
+            function resetPongBall() {
+                ball.x = pongCanvas.width / 2;
+                ball.y = pongCanvas.height / 2;
+                ball.vx = (Math.random() > 0.5 ? 4 : -4);
+                ball.vy = (Math.random() - 0.5) * 6;
+            }
+
+            function pongLoop() {
+                if (!pongRunning) return;
+                pongCtx.clearRect(0, 0, pongCanvas.width, pongCanvas.height);
+
+                // AI tracking
+                if (aiY + 30 < ball.y) aiY += 3.2;
+                else aiY -= 3.2;
+
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+
+                // Bounce top/bottom
+                if (ball.y < 0 || ball.y > pongCanvas.height) {
+                    ball.vy *= -1;
+                    AudioLab.playTone(400, 'square', 0.05, 0.05);
+                }
+
+                // Player paddle collision
+                if (ball.x < 30 && ball.y > p1Y && ball.y < p1Y + 60) {
+                    ball.vx = Math.abs(ball.vx) * 1.05;
+                    AudioLab.playTone(600, 'square', 0.05, 0.08);
+                }
+
+                // AI paddle collision
+                if (ball.x > pongCanvas.width - 30 && ball.y > aiY && ball.y < aiY + 60) {
+                    ball.vx = -Math.abs(ball.vx) * 1.05;
+                    AudioLab.playTone(550, 'square', 0.05, 0.08);
+                }
+
+                // Score check
+                if (ball.x < 0) {
+                    aiScore++;
+                    updatePongUI();
+                    if (aiScore >= 5) endPong(false);
+                    else resetPongBall();
+                } else if (ball.x > pongCanvas.width) {
+                    p1Score++;
+                    updatePongUI();
+                    if (p1Score >= 5) endPong(true);
+                    else resetPongBall();
+                }
+
+                // Draw paddles
+                pongCtx.fillStyle = '#00e5ff';
+                pongCtx.fillRect(15, p1Y, 10, 60);
+
+                pongCtx.fillStyle = '#d946ef';
+                pongCtx.fillRect(pongCanvas.width - 25, aiY, 10, 60);
+
+                // Draw ball
+                pongCtx.beginPath();
+                pongCtx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+                pongCtx.fillStyle = '#ffffff';
+                pongCtx.fill();
+
+                pongLoopId = requestAnimationFrame(pongLoop);
+            }
+
+            function updatePongUI() {
+                document.getElementById('pong-score-p1').innerText = p1Score;
+                document.getElementById('pong-score-ai').innerText = aiScore;
+            }
+
+            function endPong(isPlayerWin) {
+                pongRunning = false;
+                document.getElementById('pong-overlay').classList.remove('hidden');
+                if (isPlayerWin) {
+                    AudioLab.playVictoryJingle();
+                    App.showToast('Bạn đã thắng AI trong Neon Pong! 🏆');
+                    ProgressManager.unlockAchievement('pong_champ');
+                } else {
+                    AudioLab.playAlarmSound();
+                    App.showToast('AI đã thắng! Hãy thử lại 🤖');
+                }
+            }
+
+            // --- Game 3: Memory Glitch ---
+            let memCards = ['🎬', '🚀', '🤖', '🐱', '🍿', '👾', '⚡', '🔮'];
+            let memGrid = [], memFlipped = [], memMatched = 0, memMoves = 0;
+
+            function initMemoryGame() {
+                const pairs = [...memCards, ...memCards].sort(() => Math.random() - 0.5);
+                memGrid = pairs.map((icon, idx) => ({ id: idx, icon, matched: false }));
+                memFlipped = [];
+                memMatched = 0;
+                memMoves = 0;
+                document.getElementById('memory-matches').innerText = '0';
+                document.getElementById('memory-moves').innerText = '0';
+
+                const container = document.getElementById('memory-grid');
+                container.innerHTML = '';
+                memGrid.forEach(c => {
+                    const btn = document.createElement('button');
+                    btn.id = `mem-card-${c.id}`;
+                    btn.className = 'h-16 bg-gray-800 hover:bg-gray-700 rounded-xl border border-gray-700 text-2xl flex items-center justify-center transition active:scale-95';
+                    btn.innerText = '❓';
+                    btn.onclick = () => onMemoryCardClick(c);
+                    container.appendChild(btn);
+                });
+            }
+
+            function onMemoryCardClick(card) {
+                if (card.matched || memFlipped.length >= 2 || memFlipped.includes(card)) return;
+                const el = document.getElementById(`mem-card-${card.id}`);
+                el.innerText = card.icon;
+                el.classList.add('bg-cyan-950', 'border-cyan-500');
+                memFlipped.push(card);
+                AudioLab.playTone(500, 'sine', 0.05, 0.08);
+
+                if (memFlipped.length === 2) {
+                    memMoves++;
+                    document.getElementById('memory-moves').innerText = memMoves;
+                    const [c1, c2] = memFlipped;
+                    if (c1.icon === c2.icon) {
+                        c1.matched = true;
+                        c2.matched = true;
+                        memMatched++;
+                        document.getElementById('memory-matches').innerText = memMatched;
+                        AudioLab.playPresetSFX('coin');
+                        memFlipped = [];
+                        if (memMatched === 8) {
+                            AudioLab.playVictoryJingle();
+                            App.showToast('Tuyệt vời! Bạn đã phá đảo Memory Glitch! 🎉');
+                        }
+                    } else {
+                        // Glitch mismatch
+                        AudioLab.playPresetSFX('glitch');
+                        setTimeout(() => {
+                            document.getElementById(`mem-card-${c1.id}`).innerText = '❓';
+                            document.getElementById(`mem-card-${c2.id}`).innerText = '❓';
+                            document.getElementById(`mem-card-${c1.id}`).classList.remove('bg-cyan-950', 'border-cyan-500');
+                            document.getElementById(`mem-card-${c2.id}`).classList.remove('bg-cyan-950', 'border-cyan-500');
+                            memFlipped = [];
+                        }, 700);
+                    }
+                }
+            }
+
+            // --- Game 4: Code Breaker ---
+            let secretCode = '', cbAttempts = 0;
+
+            function initCodeBreaker() {
+                const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].sort(() => Math.random() - 0.5);
+                secretCode = digits.slice(0, 4).join('');
+                cbAttempts = 0;
+                document.getElementById('cb-history').innerHTML = '<p class="text-gray-500">Mã mới đã tạo! Đoán 4 số duy nhất...</p>';
+                document.getElementById('cb-input').value = '';
+            }
+
+            function submitCodeGuess() {
+                const guess = document.getElementById('cb-input').value.trim();
+                if (guess.length !== 4) {
+                    App.showToast('Vui lòng nhập đúng 4 chữ số!');
+                    return;
+                }
+                cbAttempts++;
+                let bulls = 0, cows = 0;
+                for (let i = 0; i < 4; i++) {
+                    if (guess[i] === secretCode[i]) bulls++;
+                    else if (secretCode.includes(guess[i])) cows++;
+                }
+
+                const history = document.getElementById('cb-history');
+                const p = document.createElement('div');
+                p.className = 'flex justify-between py-1 border-b border-gray-900';
+                p.innerHTML = `<span>#${cbAttempts}: <strong class="text-yellow-400">${guess}</strong></span> <span class="text-green-400 font-bold">${bulls} XANH</span> <span class="text-yellow-400 font-bold">${cows} VÀNG</span>`;
+                history.prepend(p);
+
+                if (bulls === 4) {
+                    AudioLab.playVictoryJingle();
+                    App.showToast(`CHÍNH XÁC! Mã bí mật là ${secretCode} 🔓`);
+                    ProgressManager.unlockAchievement('cipher_breaker');
+                } else if (cbAttempts >= 7) {
+                    AudioLab.playAlarmSound();
+                    App.showToast(`Thất bại! Mã bí mật là: ${secretCode}`);
+                } else {
+                    AudioLab.playTone(350, 'triangle', 0.1, 0.1);
+                }
+                document.getElementById('cb-input').value = '';
+            }
+
+            // --- Game 5: Reaction Test ---
+            let reactionState = 'waiting', reactionStart = 0, reactionTimeout = null;
+
+            function startReactionWaiting() {
+                reactionState = 'waiting';
+                const box = document.getElementById('reaction-box');
+                box.className = 'w-full h-60 rounded-2xl bg-red-950/80 border-2 border-red-500 flex flex-col items-center justify-center cursor-pointer select-none transition-all';
+                document.getElementById('reaction-title').innerText = 'CHỜ TÍN HIỆU ĐỔI MÀU...';
+                document.getElementById('reaction-icon').className = 'fas fa-bolt text-4xl mb-3 text-red-400';
+                
+                const delay = Math.random() * 2500 + 1500;
+                reactionTimeout = setTimeout(() => {
+                    reactionState = 'ready';
+                    box.className = 'w-full h-60 rounded-2xl bg-emerald-500 text-black border-2 border-emerald-300 flex flex-col items-center justify-center cursor-pointer select-none transition-all shadow-[0_0_40px_#10b981]';
+                    document.getElementById('reaction-title').innerText = 'NHẤP NGAY BÂY GIỜ!';
+                    document.getElementById('reaction-icon').className = 'fas fa-hand-pointer text-4xl mb-3 text-black';
+                    reactionStart = Date.now();
+                    AudioLab.playTone(800, 'square', 0.08, 0.15);
+                }, delay);
+            }
+
+            function handleReactionClick() {
+                if (reactionState === 'waiting') {
+                    clearTimeout(reactionTimeout);
+                    App.showToast('QUÁ SỚM! Bị phạt nhấp sớm ⚠️');
+                    document.getElementById('reaction-title').innerText = 'QUÁ SỚM! BẤM ĐỂ THỬ LẠI';
+                    reactionState = 'done';
+                } else if (reactionState === 'ready') {
+                    const diff = Date.now() - reactionStart;
+                    reactionState = 'done';
+                    AudioLab.playVictoryJingle();
+                    document.getElementById('reaction-title').innerText = `${diff} ms!`;
+                    document.getElementById('reaction-desc').innerText = 'Bấm lần nữa để chơi lại';
+                    App.showToast(`Phản xạ của bạn: ${diff}ms! ⚡`);
+
+                    const best = Math.min(diff, ProgressManager.data.reactionBest || 9999);
+                    ProgressManager.data.reactionBest = best;
+                    ProgressManager.save();
+                    document.getElementById('reaction-best').innerText = `${best} ms`;
+
+                    if (diff < 280) {
+                        ProgressManager.unlockAchievement('reflex_god');
+                    }
+                } else if (reactionState === 'done') {
+                    startReactionWaiting();
+                }
+            }
+
+            function switchGame(g) {
+                document.querySelectorAll('.arcade-subgame').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('[id^="game-btn-"]').forEach(el => {
+                    el.className = 'px-3 py-1.5 text-xs rounded-xl bg-gray-900 text-gray-400 border border-gray-800';
+                });
+
+                document.getElementById(`arcade-game-${g}`).classList.remove('hidden');
+                document.getElementById(`game-btn-${g}`).className = 'px-3 py-1.5 text-xs rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/50';
+
+                if (g === 'asteroids') initAsteroidsCanvas();
+                else if (g === 'pong') initPong();
+                else if (g === 'memory') initMemoryGame();
+                else if (g === 'codebreaker') initCodeBreaker();
+                else if (g === 'reaction') startReactionWaiting();
+            }
+
+            return {
+                startAsteroidsGame, switchGame, startPongGame,
+                initMemoryGame, submitCodeGuess, initCodeBreaker,
+                handleReactionClick
+            };
+        })();
+
+        /* ==================================================
+         * 7. SECRET TERMINAL ENGINE (80s CRT CLI)
+         * ================================================== */
+        const TerminalLab = (() => {
+            const modal = document.getElementById('terminal-modal');
+            const output = document.getElementById('terminal-output');
+            const input = document.getElementById('terminal-input');
+            let isOpen = false;
+            let history = [];
+            let historyIdx = -1;
+
+            const commands = {
+                help: "Danh sách lệnh: help, about, status, clear, date, matrix, chaos, disco, glitch, games, inventory, achievements, secrets, scan, unlock <code>, catdimension, devroom, exit",
+                about: "CINE-MANIA 3000 v3.4.1 // Studio Điện Ảnh Kỳ Diệu. Được xây dựng để bẻ cong thực tại của trình duyệt.",
+                status: () => `Trạng thái: Matrix=${BgCanvasEngine.isMatrix()}, TimeWarp=${ChaosLab.timeWarp}x, Sound=${document.getElementById('sound-text').innerText}`,
+                clear: () => { output.innerHTML = ''; return ''; },
+                date: () => new Date().toLocaleString('vi-VN') + " [Stardate: 2026.10]",
+                matrix: () => { BgCanvasEngine.toggleMatrix(); return "Ma trận đã được bật/tắt."; },
+                chaos: () => { App.switchTab('chaos'); return "Đang điều hướng đến Chaos Control Center..."; },
+                disco: () => { ThemeLab.setFilter('disco'); return "Đã kích hoạt Disco Mode!"; },
+                glitch: () => { ChaosLab.triggerGlitchPulse(); return "Đã gửi xung Glitch tới toàn hệ thống."; },
+                games: "Các trò Arcade: Dodge Asteroids, Neon Pong, Memory Glitch, Code Breaker, Reaction Test.",
+                inventory: () => `Vật phẩm đã mở: ${ProgressManager.data.inventory.length} vật phẩm.`,
+                achievements: () => `Thành tựu: ${ProgressManager.data.achievements.length}/12 đã mở.`,
+                secrets: "MANH MỐI BÍ MẬT: Thử Konami code, nhấp tiêu đề 5 lần, nhấp nhanh 4 góc màn hình, hoặc click chuột phải vào Poster 3.",
+                scan: () => {
+                    setTimeout(() => printLine("Đang quét các cổng mạng lượng tử... [PORT 8080: OPEN]"), 400);
+                    setTimeout(() => printLine("Quét bộ nhớ hạt... KHÔNG PHÁT HIỆN LỖ HỔNG."), 800);
+                    return "Bắt đầu quét...";
+                },
+                catdimension: () => {
+                    SecretLab.activateCatDimension();
+                    return "🐱 CHIỀU KHÔNG GIAN MÈO ĐÃ MỞ!";
+                },
+                devroom: () => {
+                    DevLab.open();
+                    return "Đang mở cổng Secret Developer Room...";
+                },
+                sudo: "Rất tiếc! Người dùng không có trong tệp sudoers. Sự cố này sẽ được báo cáo tới Mèo Cyber.",
+                exit: () => { toggle(); return "Đang đóng..."; }
+            };
+
+            function toggle() {
+                isOpen = !isOpen;
+                modal.classList.toggle('hidden', !isOpen);
+                modal.classList.toggle('flex', isOpen);
+                if (isOpen) {
+                    input.focus();
+                    AudioLab.playPresetSFX('teleport');
+                }
+            }
+
+            function printLine(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                output.appendChild(div);
+                output.scrollTop = output.scrollHeight;
+            }
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const raw = input.value.trim();
+                    if (!raw) return;
+                    printLine(`user@cinemania:~$ ${raw}`);
+                    history.push(raw);
+                    historyIdx = history.length;
+
+                    const parts = raw.split(' ');
+                    const cmd = parts[0].toLowerCase();
+                    const arg = parts[1];
+
+                    if (cmd === 'unlock') {
+                        if (arg && arg.toUpperCase() === 'KITTEN') {
+                            SecretLab.unlockEgg('cat_sequence', 'Chiều Không Gian Mèo');
+                            printLine("Mật mã chính xác: Đã mở khóa KITTEN DIMENSION!");
+                        } else {
+                            printLine("Mật mã không đúng hoặc chưa hợp lệ.");
+                        }
+                    } else if (commands[cmd]) {
+                        const res = typeof commands[cmd] === 'function' ? commands[cmd]() : commands[cmd];
+                        if (res) printLine(res);
+                    } else {
+                        printLine(`Lệnh không nhận dạng: "${cmd}". Gõ 'help' để xem danh sách.`);
+                    }
+
+                    input.value = '';
+                } else if (e.key === 'ArrowUp') {
+                    if (historyIdx > 0) {
+                        historyIdx--;
+                        input.value = history[historyIdx];
+                    }
+                } else if (e.key === 'ArrowDown') {
+                    if (historyIdx < history.length - 1) {
+                        historyIdx++;
+                        input.value = history[historyIdx];
+                    } else {
+                        historyIdx = history.length;
+                        input.value = '';
+                    }
+                }
+            });
+
+            // Shortcut backtick
+            window.addEventListener('keydown', (e) => {
+                if (e.key === '`' || e.key === '~') {
+                    toggle();
+                } else if (e.key === 'Escape') {
+                    if (isOpen) toggle();
+                    CinematicGenerator.closeModal();
+                    DevLab.close();
+                }
+            });
+
+            return { toggle, isOpen: () => isOpen };
+        })();
+
+        /* ==================================================
+         * 8. EASTER EGG HUNT 2.0 (15+ Working Secrets)
+         * ================================================== */
+        const SecretLab = (() => {
+            let card1Clicks = 0, card2Clicks = 0;
+            let dangerHoldTimer = null;
+            let recClicks = 0;
+            let cornerSequence = [];
+            let cornerTimer = null;
+
+            // 1. Konami Code Listener
+            const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            let konamiIdx = 0;
+
+            window.addEventListener('keydown', (e) => {
+                if (TerminalLab.isOpen()) return;
+                const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+                if (k === konamiCode[konamiIdx].toLowerCase()) {
+                    konamiIdx++;
+                    AudioLab.playTone(300 + (konamiIdx * 80), 'sine', 0.1, 0.1);
+                    if (konamiIdx === konamiCode.length) {
+                        unlockEgg('konami', 'Konami God Mode');
+                        activateGodMode();
+                        konamiIdx = 0;
+                    }
+                } else {
+                    konamiIdx = 0;
+                }
+            });
+
+            function activateGodMode() {
+                AudioLab.playVictoryJingle();
+                App.showToast('GOD MODE ACTIVATED! 🎉🔥', 'fa-crown');
+                document.getElementById('status-tag').innerText = '[MODE: SUPER CINEMA GOD MODE]';
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => FXEngine.createFirework(Math.random() * window.innerWidth, window.innerHeight * 0.4), i * 200);
+                }
+                ThemeLab.setFilter('disco');
+            }
+
+            // 2. Title 5-Clicks Matrix
+            let titleClicks = 0, titleTimer = null;
+            document.getElementById('main-title').addEventListener('click', () => {
+                titleClicks++;
+                AudioLab.playTone(500 + (titleClicks * 100), 'triangle', 0.1, 0.1);
+                document.getElementById('main-title').classList.add('is-glitching');
+                setTimeout(() => document.getElementById('main-title').classList.remove('is-glitching'), 300);
+
+                clearTimeout(titleTimer);
+                titleTimer = setTimeout(() => titleClicks = 0, 2000);
+
+                if (titleClicks >= 5) {
+                    titleClicks = 0;
+                    BgCanvasEngine.toggleMatrix();
+                    unlockEgg('title_matrix', 'Mở Khóa Ma Trận');
+                }
+            });
+
+            // 3. Ninja Poster 10 Clicks Surge
+            function onCard1Click(el) {
+                card1Clicks++;
+                AudioLab.playTone(440 + card1Clicks * 30, 'sawtooth', 0.15, 0.1);
+                FXEngine.createFirework(el.getBoundingClientRect().left + 80, el.getBoundingClientRect().top + 50, 15);
+                if (card1Clicks >= 10) {
+                    card1Clicks = 0;
+                    unlockEgg('ninja_surge', 'Năng Lượng Ninja Tối Thượng');
+                    App.showToast('KÍCH HOẠT NINJA SURGE SIÊU CẤP! ⚡');
+                    AudioLab.playVictoryJingle();
+                }
+            }
+
+            // 4. Cat Dimension Sequence
+            function onCard2Click(el) {
+                card2Clicks++;
+                AudioLab.playTone(587, 'triangle', 0.2, 0.1);
+                FXEngine.createFirework(el.getBoundingClientRect().left + 80, el.getBoundingClientRect().top + 50, 15);
+                if (card2Clicks === 3) {
+                    App.showToast('Đã tích lũy 3 lần bấm Mèo! Giờ hãy bấm vào Linh Vật ở góc phải!');
+                }
+            }
+
+            function activateCatDimension() {
+                unlockEgg('cat_sequence', 'Chiều Không Gian Mèo');
+                ThemeLab.setFilter('retro80s');
+                App.showToast('CHIỀU KHÔNG GIAN MÈO NEON ĐÃ KÍCH HOẠT! 🐱🌌');
+                AudioLab.playVictoryJingle();
+            }
+
+            // 5. Danger Reel Long-Press (3s)
+            function startDangerHold() {
+                dangerHoldTimer = setTimeout(() => {
+                    unlockEgg('danger_longpress', 'Reel Overdrive');
+                    App.showToast('BẠN ĐÃ GIỮ ĐỦ 3 GIÂY: KÍCH HOẠT OVERDRIVE! 💥');
+                    AudioLab.playPresetSFX('explosion');
+                }, 3000);
+            }
+            function endDangerHold() {
+                clearTimeout(dangerHoldTimer);
+            }
+
+            // 6. Right Click on Card 3
+            function onCard3Click(el) {
+                AudioLab.playTone(659, 'sine', 0.2, 0.1);
+                FXEngine.createFirework(el.getBoundingClientRect().left + 80, el.getBoundingClientRect().top + 50, 15);
+            }
+            function onCard3ContextMenu(e) {
+                e.preventDefault();
+                unlockEgg('right_click_reel', 'Kịch Bản Cấm Sau Hậu Trường');
+                App.showToast('Bạn đã mở menu chuột phải bí mật của Cuộn Phim Báo Động! 📜');
+            }
+
+            // 7. REC Dot Anomaly
+            document.getElementById('rec-dot').addEventListener('click', () => {
+                recClicks++;
+                AudioLab.playTone(700 + recClicks * 50, 'sine', 0.08, 0.1);
+                if (recClicks >= 5) {
+                    recClicks = 0;
+                    unlockEgg('rec_anomaly', 'Dị Điểm Thời Gian (Time Anomaly)');
+                    ChaosLab.setTimeWarp(0.2);
+                    App.showToast('DỊ ĐIỂM THỜI GIAN: Tốc độ trang chậm còn 0.2x! ⏳');
+                }
+            });
+
+            // 8. Film Icon Collector
+            let filmClicks = 0;
+            function triggerFilmIconClick() {
+                filmClicks++;
+                AudioLab.playTone(600, 'square', 0.1, 0.1);
+                if (filmClicks >= 7) {
+                    filmClicks = 0;
+                    unlockEgg('film_collector', 'Nhà Sưu Tầm Cuộn Phim Vàng');
+                    App.showToast('Đã mở khóa huy hiệu: Nhà Sưu Tầm Cuộn Phim! 🎞️');
+                    ProgressManager.addInventoryItem('film_gold', 'Cuộn Phim Vàng Danh Dự', 'fa-film', 'Vật phẩm kỷ niệm huyền thoại.');
+                }
+            }
+
+            // 9. 4-Corners Clockwise Sequence (TL -> TR -> BR -> BL)
+            function setupCorners() {
+                const addCorner = (id, step) => {
+                    document.getElementById(id).addEventListener('click', () => {
+                        cornerSequence.push(step);
+                        AudioLab.playTone(300 + step * 100, 'sine', 0.1, 0.1);
+                        clearTimeout(cornerTimer);
+                        cornerTimer = setTimeout(() => cornerSequence = [], 6000);
+
+                        if (cornerSequence.join('') === '1234') {
+                            cornerSequence = [];
+                            unlockEgg('four_corners', 'Cổng Không Gian 4 Góc');
+                            App.showToast('BẠN ĐÃ MỞ CỔNG KHÔNG GIAN BÍ MẬT 4 GÓC! 🌀');
+                            AudioLab.playVictoryJingle();
+                        }
+                    });
+                };
+                addCorner('corner-tl', 1);
+                addCorner('corner-tr', 2);
+                addCorner('corner-br', 3);
+                addCorner('corner-bl', 4);
+            }
+            setupCorners();
+
+            // Tracking and Persistence
+            function unlockEgg(id, name) {
+                if (!ProgressManager.data.secrets.includes(id)) {
+                    ProgressManager.data.secrets.push(id);
+                    ProgressManager.save();
+                    AudioLab.playVictoryJingle();
+                    App.showToast(`BÍ MẬT MỚI: ${name}! ⭐`, 'fa-star');
+                    DevLab.updateStats();
+
+                    if (ProgressManager.data.secrets.length >= 5) {
+                        ProgressManager.unlockAchievement('secret_hunter');
+                    }
+                }
+            }
+
+            return {
+                onCard1Click, onCard2Click, onCard3Click, onCard3ContextMenu,
+                startDangerHold, endDangerHold, triggerFilmIconClick,
+                activateCatDimension, unlockEgg
+            };
+        })();
+
+        /* ==================================================
+         * 9. SECRET ARCHIVE (8 Classified Lore Documents)
+         * ================================================== */
+        const ArchiveLab = (() => {
+            const documents = [
+                { id: 'DOC-001', title: 'Sự Cố Trạm Không Gian Cine-9', status: 'unlocked', content: 'Ngày 14 tháng 10 năm 2026: Một cuộn phim thử nghiệm bị nhiễm bức xạ lượng tử phát tán tín hiệu glitch khắp mạng lưới studio Cine-Mania.' },
+                { id: 'DOC-002', title: 'Hồ Sơ Mèo Lượng Tử Không Gian', status: 'unlocked', content: 'Đối tượng: Mèo Cyber Neon. Khả năng dịch chuyển giữa các chiều không gian phim noir, cyberpunk và hoạt hình 80s. Được quan sát thấy thường xuyên xuất hiện ở góc phải màn hình.' },
+                { id: 'DOC-003', title: 'Nhật Ký Kỹ Sư 00 (Mã Hóa)', status: 'encrypted', cipherText: 'Q0lORS1NQU5JQS AzMDAwIGxhIG1vdCB0cm8gY2hvaSB2byB0YW4h', content: 'Bản dịch: "CINE-MANIA 3000 là một trò chơi vô tận! Đừng để cuộn phim báo động phát nổ trước khi bạn giải mã hết bí mật."' },
+                { id: 'DOC-004', title: 'Bí Mật Cuộn Phim Tự Hủy', status: 'unlocked', content: 'Kịch bản Danger Reel thực chất là một chuỗi kiểm tra tâm lý khán giả: Ai càng tò mò càng dễ nhấn vào nút đỏ!' },
+                { id: 'DOC-005', title: 'Thông Điệp Phá Vỡ Bức Tường Thứ Tư', status: 'unlocked', content: 'Chào bạn, người đang ngồi trước màn hình! Chúng tôi biết bạn đã rê chuột qua lại ít nhất 20 lần và vừa thử nhấn vào nút đỏ. Hãy tiếp tục khám phá!' },
+                { id: 'DOC-006', title: 'Giao Thức Ma Trận Điên Rồ', status: 'unlocked', content: 'Khi tiêu đề chính bị nhấn liên tục 5 lần, tần số quét của trang web sẽ đồng bộ với mưa mã nhị phân màu xanh lá cây của Cine-OS.' },
+                { id: 'DOC-007', title: 'Kịch Bản Phim Chưa Từng Chiếu', status: 'unlocked', content: 'Cảnh 1: Ninja Không Gian gặp Mèo Neon trên nóc tàu điện ngầm Cyberpunk. Ninja rút kiếm ánh sáng, Mèo nhả ra cuộn phim báo động. Hết phim.' },
+                { id: 'DOC-008', title: 'Chìa Khóa Phòng Nhà Phát Triển', status: 'unlocked', content: 'Bí mật nằm ở biểu tượng chìa khóa góc trên hoặc lệnh devroom trong Secret Terminal CLI.' }
+            ];
+
+            function render() {
+                const list = document.getElementById('archive-doc-list');
+                list.innerHTML = '';
+                let count = 0;
+
+                documents.forEach(doc => {
+                    const isDecrypted = ProgressManager.data.unlockedDocs.includes(doc.id);
+                    if (isDecrypted) count++;
+
+                    const card = document.createElement('div');
+                    card.className = 'bg-gray-900/80 p-5 rounded-xl border border-gray-800 hover:border-fuchsia-500 transition space-y-2';
+                    
+                    if (doc.status === 'encrypted' && !isDecrypted) {
+                        card.innerHTML = `
+                            <div class="flex justify-between items-center text-xs font-code">
+                                <span class="text-fuchsia-400 font-bold">${doc.id}</span>
+                                <span class="text-red-400 font-bold"><i class="fas fa-lock"></i> ĐÃ MÃ HÓA</span>
+                            </div>
+                            <h4 class="text-sm font-bold text-gray-200">${doc.title}</h4>
+                            <p class="text-xs font-code text-gray-500 bg-black/60 p-2 rounded">${doc.cipherText}</p>
+                            <button onclick="ArchiveLab.decryptDoc('${doc.id}')" class="px-3 py-1 bg-fuchsia-700 hover:bg-fuchsia-600 text-white font-bold text-xs rounded transition">
+                                GIẢI MÃ TÀI LIỆU 🔓
+                            </button>
+                        `;
+                    } else {
+                        card.innerHTML = `
+                            <div class="flex justify-between items-center text-xs font-code">
+                                <span class="text-fuchsia-400 font-bold">${doc.id}</span>
+                                <span class="text-green-400 font-bold"><i class="fas fa-lock-open"></i> ĐÃ GIẢI MÃ</span>
+                            </div>
+                            <h4 class="text-sm font-bold text-gray-200">${doc.title}</h4>
+                            <p class="text-xs text-gray-400 leading-relaxed bg-black/40 p-2 rounded border border-gray-800/60">${doc.content}</p>
+                        `;
+                    }
+                    list.appendChild(card);
+                });
+
+                document.getElementById('archive-unlocked-count').innerText = count;
+            }
+
+            function decryptDoc(id) {
+                if (!ProgressManager.data.unlockedDocs.includes(id)) {
+                    ProgressManager.data.unlockedDocs.push(id);
+                    ProgressManager.save();
+                    AudioLab.playVictoryJingle();
+                    App.showToast(`Đã giải mã thành công ${id}! 📜`);
+                    ProgressManager.unlockAchievement('cipher_cracker');
+                    render();
+                }
+            }
+
+            return { render, decryptDoc, getCount: () => documents.length };
+        })();
+
+        /* ==================================================
+         * 10. ACHIEVEMENTS & INVENTORY PROGRESS MANAGER
+         * ================================================== */
+        const ProgressManager = (() => {
+            const STORAGE_KEY = 'cinemania_save_v3';
+            let data = {
+                achievements: [],
+                inventory: [],
+                secrets: [],
+                unlockedDocs: ['DOC-001', 'DOC-002', 'DOC-004', 'DOC-005', 'DOC-006', 'DOC-007', 'DOC-008'],
+                asteroidBest: 0,
+                reactionBest: 9999
+            };
+
+            const allAchievements = [
+                { id: 'first_contact', name: 'Lần Chạm Đầu Tiên', desc: 'Tương tác với poster phim lần đầu', icon: 'fa-hand-sparkles' },
+                { id: 'konami_god', name: 'Konami God Mode', desc: 'Nhập chính xác mã Konami Code huyền thoại', icon: 'fa-crown' },
+                { id: 'matrix_init', name: 'Ma Trận Nhập Môn', desc: 'Kích hoạt mưa ký tự Matrix Rain', icon: 'fa-terminal' },
+                { id: 'chaos_master', name: 'Kỹ Sư Hỗn Loạn', desc: 'Bật đồng thời 3 hiệu ứng Chaos Control', icon: 'fa-biohazard' },
+                { id: 'sound_artist', name: 'Nghệ Sĩ Synthwave', desc: 'Chơi các nốt nhạc trong Sound Lab', icon: 'fa-music' },
+                { id: 'toybox_hero', name: 'Bậc Thầy Đồ Chơi', desc: 'Trải nghiệm phòng thí nghiệm Toybox', icon: 'fa-cubes' },
+                { id: 'pong_champ', name: 'Nhà Vô Địch Pong', desc: 'Đánh bại AI lượng tử trong Neon Pong', icon: 'fa-table-tennis' },
+                { id: 'cipher_cracker', name: 'Chuyên Gia Mật Mã', desc: 'Giải mã tài liệu bí mật bị khóa', icon: 'fa-key' },
+                { id: 'reflex_god', name: 'Phản Xạ Thần Thánh', desc: 'Đạt phản xạ dưới 280ms trong Reaction Test', icon: 'fa-bolt' },
+                { id: 'secret_hunter', name: 'Thợ Săn Bí Mật', desc: 'Khám phá ít nhất 5 Easter eggs', icon: 'fa-compass' },
+                { id: 'arcade_veteran', name: 'Cao Thủ Arcade', desc: 'Thử sức với các mini-game của Cine-Mania', icon: 'fa-gamepad' },
+                { id: 'danger_survivor', name: 'Sống Sót Thước Phim Đỏ', desc: 'Kích hoạt Danger Reel thành công', icon: 'fa-radiation' }
+            ];
+
+            function load() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (raw) {
+                        data = Object.assign(data, JSON.parse(raw));
+                    }
+                } catch (e) {
+                    console.warn("Storage load error:", e);
+                }
+            }
+
+            function save() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                } catch (e) {
+                    console.warn("Storage save error:", e);
+                }
+            }
+
+            function unlockAchievement(id) {
+                if (!data.achievements.includes(id)) {
+                    data.achievements.push(id);
+                    save();
+                    const ach = allAchievements.find(a => a.id === id);
+                    if (ach) {
+                        AudioLab.playVictoryJingle();
+                        App.showToast(`THÀNH TỰU MỞ KHÓA: ${ach.name}! 🏆`, ach.icon);
+                        MascotLab.say(`Chúc mừng bạn vừa đạt thành tựu: ${ach.name}!`);
+                    }
+                    renderVault();
+                }
+            }
+
+            function addInventoryItem(id, name, icon, desc) {
+                if (!data.inventory.some(i => i.id === id)) {
+                    data.inventory.push({ id, name, icon, desc });
+                    save();
+                    renderVault();
+                }
+            }
+
+            function switchVaultTab(tab) {
+                document.getElementById('vault-view-achievements').classList.toggle('hidden', tab !== 'achievements');
+                document.getElementById('vault-view-inventory').classList.toggle('hidden', tab !== 'inventory');
+                document.getElementById('vault-tab-btn-ach').className = tab === 'achievements' ? 'px-5 py-2 text-xs font-bold rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/60' : 'px-5 py-2 text-xs font-bold rounded-xl bg-gray-900 text-gray-400 border border-gray-800';
+                document.getElementById('vault-tab-btn-inv').className = tab === 'inventory' ? 'px-5 py-2 text-xs font-bold rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/60' : 'px-5 py-2 text-xs font-bold rounded-xl bg-gray-900 text-gray-400 border border-gray-800';
+            }
+
+            function renderVault() {
+                // Render Achievements
+                const achContainer = document.getElementById('vault-view-achievements');
+                achContainer.innerHTML = '';
+                allAchievements.forEach(a => {
+                    const isUnlocked = data.achievements.includes(a.id);
+                    const div = document.createElement('div');
+                    div.className = `p-4 rounded-xl border flex items-center space-x-3 transition ${isUnlocked ? 'bg-amber-950/40 border-amber-500/60 text-amber-200' : 'bg-gray-900/40 border-gray-800 text-gray-500'}`;
+                    div.innerHTML = `
+                        <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg ${isUnlocked ? 'bg-amber-500/20 text-amber-300' : 'bg-gray-800 text-gray-600'}">
+                            <i class="fas ${a.icon}"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold ${isUnlocked ? 'text-amber-300' : 'text-gray-400'}">${a.name}</h4>
+                            <p class="text-[11px] leading-tight text-gray-400 mt-0.5">${a.desc}</p>
+                        </div>
+                    `;
+                    achContainer.appendChild(div);
+                });
+                document.getElementById('vault-ach-count').innerText = `${data.achievements.length}/${allAchievements.length}`;
+
+                // Render Inventory
+                const invContainer = document.getElementById('vault-view-inventory');
+                invContainer.innerHTML = '';
+                if (data.inventory.length === 0) {
+                    invContainer.innerHTML = '<p class="col-span-full text-xs text-gray-500 text-center py-6">Chưa có vật phẩm nào trong kho. Hãy tiếp tục săn tìm Easter eggs!</p>';
+                } else {
+                    data.inventory.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'p-4 rounded-xl border border-cyan-500/40 bg-cyan-950/30 flex flex-col items-center text-center space-y-2';
+                        div.innerHTML = `
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-2xl">
+                                <i class="fas ${item.icon}"></i>
+                            </div>
+                            <h4 class="text-xs font-bold text-cyan-300">${item.name}</h4>
+                            <p class="text-[10px] text-gray-400">${item.desc}</p>
+                        `;
+                        invContainer.appendChild(div);
+                    });
+                }
+                document.getElementById('vault-inv-count').innerText = `${data.inventory.length}/8`;
+            }
+
+            function confirmReset() {
+                if (confirm('Bạn có chắc chắn muốn đặt lại toàn bộ thành tựu và bí mật đã tìm thấy không?')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    location.reload();
+                }
+            }
+
+            load();
+
+            return {
+                data, save, unlockAchievement, addInventoryItem,
+                switchVaultTab, renderVault, confirmReset
+            };
+        })();
+
+        /* ==================================================
+         * 11. INTERACTIVE MASCOT (Neon Cyber Cat / Bot)
+         * ================================================== */
+        const MascotLab = (() => {
+            const speech = document.getElementById('mascot-speech');
+            let isHidden = false;
+            let speechTimer = null;
+            let petCount = 0;
+
+            const quotes = [
+                "Meo! Bạn có biết nhấp 5 lần vào tiêu đề sẽ gọi ra ma trận?",
+                "Tôi đã du hành qua 3000 vũ trụ điện ảnh... và phim này đỉnh nhất!",
+                "Đừng tin nút đỏ Danger Reel, nhưng nếu không bấm thì tò mò chết mất!",
+                "Bạn đã thử gõ Konami Code trên bàn phím chưa? ↑ ↑ ↓ ↓...",
+                "Nghe đồn có một căn phòng bí mật của Nhà Phát Triển...",
+                "Meo meo! Tôi có thể cảm nhận các hạt lượng tử đang xoay quanh con trỏ chuột.",
+                "Thử nhấp 4 góc màn hình theo chiều kim đồng hồ xem điều gì xảy ra!",
+                "Bản nhạc nền Synthwave này làm tôi muốn nhảy nhót quá đi thôi!"
+            ];
+
+            function onClick() {
+                petCount++;
+                AudioLab.playTone(600 + petCount * 40, 'triangle', 0.15, 0.15);
+                const q = quotes[Math.floor(Math.random() * quotes.length)];
+                say(q);
+
+                if (petCount >= 5) {
+                    SecretLab.unlockEgg('cat_pet', 'Bạn Thân Của Mèo Neon');
+                    App.showToast('Mèo Neon đang gừ gừ vì hạnh phúc! 😻');
+                }
+            }
+
+            function say(text) {
+                speech.innerText = text;
+                speech.classList.remove('hidden');
+                clearTimeout(speechTimer);
+                speechTimer = setTimeout(() => {
+                    speech.classList.add('hidden');
+                }, 4000);
+            }
+
+            function toggleVisibility() {
+                isHidden = !isHidden;
+                document.getElementById('interactive-mascot').classList.toggle('hidden', isHidden);
+            }
+
+            return { onClick, say, toggleVisibility };
+        })();
+
+        /* ==================================================
+         * 12. CINEMATIC EVENT GENERATOR (8 Random Reel Events)
+         * ================================================== */
+        const CinematicGenerator = (() => {
+            const modal = document.getElementById('event-modal');
+            const content = document.getElementById('modal-content-area');
+
+            function triggerRandomEvent() {
+                ProgressManager.unlockAchievement('danger_survivor');
+                AudioLab.playAlarmSound();
+                document.getElementById('main-body').classList.add('shake-heavy');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                const eventId = Math.floor(Math.random() * 8);
+
+                switch (eventId) {
+                    case 0: // Original Trap Countdown
+                        eventMeltdown();
+                        break;
+                    case 1: // Meteor Barrage
+                        eventMeteorBarrage();
+                        break;
+                    case 2: // Cyber Glitch Hack
+                        eventGlitchHack();
+                        break;
+                    case 3: // Jackpot Token Win
+                        eventJackpot();
+                        break;
+                    case 4: // Time Anomaly
+                        eventTimeReverse();
+                        break;
+                    case 5: // Cat Takeover
+                        eventCatTakeover();
+                        break;
+                    case 6: // Horror Neon Anomaly
+                        eventHorrorBroadcast();
+                        break;
+                    default:
+                        eventMeltdown();
+                        break;
+                }
+            }
+
+            function eventMeltdown() {
+                let countdown = 4;
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="text-red-500 text-5xl animate-ping my-4"><i class="fas fa-biohazard"></i></div>
+                        <h2 class="text-2xl font-black text-red-500 uppercase tracking-widest">CẢNH BÁO TỰ HỦY REEL!</h2>
+                        <div class="text-6xl font-black font-code text-yellow-400 my-4" id="modal-timer">04</div>
+                        <p class="text-xs text-gray-400 font-code">Tiến trình thanh trừng cuộn phim bí mật đang diễn ra...</p>
+                    </div>
+                `;
+                const timer = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        document.getElementById('modal-timer').innerText = `0${countdown}`;
+                        AudioLab.playAlarmSound();
+                    } else {
+                        clearInterval(timer);
+                        document.getElementById('main-body').classList.remove('shake-heavy');
+                        showAsciiCatTrap();
+                    }
+                }, 1000);
+            }
+
+            function showAsciiCatTrap() {
+                FXEngine.createFirework(window.innerWidth / 2, window.innerHeight / 2, 40);
+                AudioLab.playVictoryJingle();
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-bold text-cyan-400">🎉 BẠN ĐÃ BỊ LỪA! (IT'S A TRAP) 🎉</h2>
+                        <pre class="font-code text-xs text-green-400 bg-black/90 p-4 rounded-xl border border-green-800 leading-none overflow-x-auto text-left mx-auto max-w-sm">
+      /\\_/\\  
+     ( o.o )  &lt;-- "Cuộn phim vẫn an toàn!"
+      &gt; ^ &lt;
+    ---------------------------------
+    [🎬 CINE-MANIA 3000 SPECIAL REEL 🎬]
+    ---------------------------------
+    \\   /  \\   /  \\   /  \\   /  \\   /
+     o-o    o-o    o-o    o-o    o-o
+                        </pre>
+                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs transition">
+                            Đóng & Tiếp Tục Thám Hiểm
+                        </button>
+                    </div>
+                `;
+            }
+
+            function eventMeteorBarrage() {
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <i class="fas fa-meteor text-5xl text-orange-400 animate-spin"></i>
+                        <h2 class="text-2xl font-bold text-orange-400">CƠN BÃO THIÊN THẠCH LƯỢNG TỬ!</h2>
+                        <p class="text-xs text-gray-300">50 thiên thạch vũ trụ vừa quét qua toàn bộ màn hình của bạn.</p>
+                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-orange-500 text-black font-bold text-xs rounded-xl">Thu Dọn Mảnh Vỡ</button>
+                    </div>
+                `;
+                for (let i = 0; i < 6; i++) {
+                    setTimeout(() => FXEngine.createFirework(Math.random() * window.innerWidth, window.innerHeight * 0.3, 30), i * 150);
+                }
+            }
+
+            function eventGlitchHack() {
+                ChaosLab.triggerGlitchPulse();
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <i class="fas fa-terminal text-5xl text-green-400"></i>
+                        <h2 class="text-xl font-bold text-green-400">TÍN HIỆU PHÁT THANH BỊ CHẶN BỞI HACKER!</h2>
+                        <p class="text-xs text-gray-300 font-code">"Mật mã mở khóa Terminal: Hãy thử gõ <strong class='text-yellow-400'>catdimension</strong>"</p>
+                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-green-500 text-black font-bold text-xs rounded-xl">Đã Ghi Nhận</button>
+                    </div>
+                `;
+            }
+
+            function eventJackpot() {
+                ChaosLab.triggerConfettiRain();
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <i class="fas fa-gem text-5xl text-yellow-400 animate-bounce"></i>
+                        <h2 class="text-2xl font-black text-yellow-400">JACKPOT! TRÚNG VẬT PHẨM HIẾM!</h2>
+                        <p class="text-xs text-gray-300">Bạn đã quay trúng: Cuộn Phim Báo Động Huyền Thoại!</p>
+                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-yellow-500 text-black font-bold text-xs rounded-xl">Bỏ Vào Túi Đồ</button>
+                    </div>
+                `;
+                ProgressManager.addInventoryItem('danger_token', 'Cuộn Phim Báo Động', 'fa-compact-disc', 'Vật phẩm sống sót sau Danger Reel.');
+            }
+
+            function eventTimeReverse() {
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <i class="fas fa-history text-5xl text-purple-400 animate-spin"></i>
+                        <h2 class="text-xl font-bold text-purple-400">BẺ CONG KHÔNG-THỜI GIAN</h2>
+                        <p class="text-xs text-gray-300">Đồng hồ REC đã bị dịch chuyển ngược dòng thực tại.</p>
+                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-purple-600 text-white font-bold text-xs rounded-xl">Khôi Phục Trật Tự</button>
+                    </div>
+                `;
+            }
+
+            function eventCatTakeover() {
+                SecretLab.activateCatDimension();
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <i class="fas fa-cat text-5xl text-fuchsia-400 animate-bounce"></i>
+                        <h2 class="text-xl font-bold text-fuchsia-400">CUỘC XÂM LĂNG CỦA MÈO NEON!</h2>
+                        <p class="text-xs text-gray-300">Toàn bộ màn hình đã bị bao phủ bởi năng lượng mèo lượng tử!</p>
+                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-fuchsia-600 text-white font-bold text-xs rounded-xl">Chấp Nhận Định Mệnh Meo</button>
+                    </div>
+                `;
+            }
+
+            function eventHorrorBroadcast() {
+                ThemeLab.setFilter('horror');
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <i class="fas fa-skull text-5xl text-red-500 animate-pulse"></i>
+                        <h2 class="text-xl font-bold text-red-500">PHÁT THANH KINH DỊ NEON</h2>
+                        <p class="text-xs text-gray-300">Màn hình đã chuyển sang chế độ Horror Noir Neon.</p>
+                        <button onclick="CinematicGenerator.closeModal()" class="px-6 py-2 bg-red-600 text-white font-bold text-xs rounded-xl">Quay Về Ánh Sáng</button>
+                    </div>
+                `;
+            }
+
+            function closeModal() {
+                document.getElementById('main-body').classList.remove('shake-heavy', 'shake-light');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+
+            return { triggerRandomEvent, closeModal };
+        })();
+
+        /* ==================================================
+         * 13. THEME LAB (CSS Variables & Visual Presets)
+         * ================================================== */
+        const ThemeLab = (() => {
+            function setFilter(filterName) {
+                const body = document.getElementById('main-body');
+                body.className = body.className.replace(/filter-\w+/g, '');
+                if (filterName !== 'none') {
+                    body.classList.add(`filter-${filterName}`);
+                    App.showToast(`Đổi bộ lọc: ${filterName.toUpperCase()} 🎨`);
+                } else {
+                    App.showToast('Khôi phục bộ lọc gốc 🎬');
+                }
+                AudioLab.playTone(600, 'sine', 0.15, 0.1);
+            }
+
+            function updateCustomColors() {
+                const p = document.getElementById('theme-color-primary').value;
+                const s = document.getElementById('theme-color-secondary').value;
+                const a = document.getElementById('theme-color-accent').value;
+                document.documentElement.style.setProperty('--neon-primary', p);
+                document.documentElement.style.setProperty('--neon-secondary', s);
+                document.documentElement.style.setProperty('--neon-accent', a);
+            }
+
+            function toggleCRT(enabled) {
+                document.getElementById('crt-overlay').classList.toggle('hidden', !enabled);
+            }
+
+            function toggleRGB(enabled) {
+                document.getElementById('main-title').classList.toggle('rgb-split', enabled);
+            }
+
+            function setGrain(val) {
+                document.documentElement.style.setProperty('--grain-opacity', val);
+                document.getElementById('grain-val-display').innerText = `${Math.round(val * 100)}%`;
+            }
+
+            function setParticleCount(val) {
+                BgCanvasEngine.initParticles(parseInt(val, 10));
+                document.getElementById('particles-density-display').innerText = `${val} hạt`;
+            }
+
+            function applyPreset(name) {
+                if (name === 'cyberpunk') {
+                    document.documentElement.style.setProperty('--neon-primary', '#00e5ff');
+                    document.documentElement.style.setProperty('--neon-secondary', '#d946ef');
+                    setFilter('cyberpunk');
+                } else if (name === 'synthwave') {
+                    document.documentElement.style.setProperty('--neon-primary', '#ff007f');
+                    document.documentElement.style.setProperty('--neon-secondary', '#7928ca');
+                    setFilter('retro80s');
+                } else if (name === 'matrix') {
+                    document.documentElement.style.setProperty('--neon-primary', '#00ff66');
+                    document.documentElement.style.setProperty('--neon-secondary', '#003311');
+                    BgCanvasEngine.toggleMatrix(true);
+                } else if (name === 'cosmic') {
+                    document.documentElement.style.setProperty('--neon-primary', '#9333ea');
+                    document.documentElement.style.setProperty('--neon-secondary', '#3b82f6');
+                    setFilter('none');
+                }
+                App.showToast(`Đã áp dụng Preset: ${name.toUpperCase()} 🌟`);
+            }
+
+            function resetTheme() {
+                document.documentElement.style.setProperty('--neon-primary', '#00e5ff');
+                document.documentElement.style.setProperty('--neon-secondary', '#d946ef');
+                document.documentElement.style.setProperty('--neon-accent', '#facc15');
+                setFilter('none');
+                toggleCRT(false);
+                document.getElementById('theme-toggle-crt').checked = false;
+                toggleRGB(false);
+                document.getElementById('theme-toggle-rgb').checked = false;
+            }
+
+            return {
+                setFilter, updateCustomColors, toggleCRT, toggleRGB,
+                setGrain, setParticleCount, applyPreset, resetTheme
+            };
+        })();
+
+        /* ==================================================
+         * 14. SECRET DEVELOPER ROOM
+         * ================================================== */
+        const DevLab = (() => {
+            const modal = document.getElementById('dev-room-modal');
+
+            function open() {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                updateStats();
+                AudioLab.playPresetSFX('teleport');
+            }
+
+            function close() {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+
+            function updateStats() {
+                document.getElementById('dev-egg-count').innerText = ProgressManager.data.secrets.length;
+            }
+
+            function updateParticleCount(count) {
+                const el = document.getElementById('dev-particles');
+                if (el) el.innerText = count;
+            }
+
+            function unlockAllSecrets() {
+                ['konami', 'title_matrix', 'ninja_surge', 'cat_sequence', 'danger_longpress', 'right_click_reel', 'rec_anomaly', 'film_collector', 'four_corners'].forEach(k => {
+                    if (!ProgressManager.data.secrets.includes(k)) ProgressManager.data.secrets.push(k);
+                });
+                ['first_contact', 'konami_god', 'matrix_init', 'chaos_master', 'sound_artist', 'toybox_hero', 'pong_champ', 'cipher_cracker', 'reflex_god', 'secret_hunter', 'arcade_veteran', 'danger_survivor'].forEach(a => {
+                    ProgressManager.unlockAchievement(a);
+                });
+                ProgressManager.data.unlockedDocs = ['DOC-001', 'DOC-002', 'DOC-003', 'DOC-004', 'DOC-005', 'DOC-006', 'DOC-007', 'DOC-008'];
+                ProgressManager.save();
+                updateStats();
+                ArchiveLab.render();
+                ProgressManager.renderVault();
+                App.showToast('CHEAT: Đã mở khóa toàn bộ thành tựu & bí mật! 🔑');
+            }
+
+            // Simple FPS counter
+            let lastLoop = performance.now();
+            function fpsLoop() {
+                const thisLoop = performance.now();
+                const fps = Math.round(1000 / (thisLoop - lastLoop));
+                lastLoop = thisLoop;
+                const el = document.getElementById('dev-fps');
+                if (el) el.innerText = fps;
+                requestAnimationFrame(fpsLoop);
+            }
+            fpsLoop();
+
+            return { open, close, updateStats, updateParticleCount, unlockAllSecrets };
+        })();
+
+        /* ==================================================
+         * 15. MAIN APP COORDINATOR & ROUTER
+         * ================================================== */
+        const App = (() => {
+            let currentTab = 'cinema';
+
+            function init() {
+                updateTimeCode();
+                setInterval(updateTimeCode, 40);
+                ArchiveLab.render();
+                ProgressManager.renderVault();
+
+                // Track first interaction
+                window.addEventListener('click', () => {
+                    AudioLab.init();
+                    ProgressManager.unlockAchievement('first_contact');
+                }, { once: true });
+            }
+
+            function switchTab(tabId) {
+                currentTab = tabId;
+                document.querySelectorAll('.tab-view').forEach(tab => tab.classList.add('hidden'));
+                document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                    btn.className = 'nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-gray-900 text-gray-400 hover:text-white border border-gray-800 whitespace-nowrap transition flex items-center space-x-1.5';
+                });
+
+                const activeTab = document.getElementById(`tab-${tabId}`);
+                if (activeTab) activeTab.classList.remove('hidden');
+
+                const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+                if (activeBtn) {
+                    activeBtn.className = 'nav-tab-btn px-2.5 md:px-3 py-1 text-xs rounded-lg bg-cyan-900/60 text-cyan-300 border border-cyan-500 whitespace-nowrap transition flex items-center space-x-1.5';
+                }
+
+                if (tabId === 'arcade') {
+                    ProgressManager.unlockAchievement('arcade_veteran');
+                }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function showToast(msg, iconClass = 'fa-magic') {
+                const toast = document.getElementById('toast');
+                const toastMsg = document.getElementById('toast-msg');
+                const toastIcon = document.getElementById('toast-icon');
+
+                toastMsg.innerText = msg;
+                toastIcon.className = `fas ${iconClass} text-yellow-400 text-base`;
+
+                toast.classList.remove('translate-y-28', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+
+                clearTimeout(toast._timer);
+                toast._timer = setTimeout(() => {
+                    toast.classList.add('translate-y-28', 'opacity-0');
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                }, 3200);
+            }
+
+            function updateTimeCode() {
+                const now = new Date();
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(now.getMinutes()).padStart(2, '0');
+                const s = String(now.getSeconds()).padStart(2, '0');
+                const ms = String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0');
+                document.getElementById('time-display').innerText = `${h}:${m}:${s}:${ms}`;
+            }
+
+            return {
+                init, switchTab, showToast,
+                get currentTab() { return currentTab; }
+            };
+        })();
+
+        // Start Application
+        window.addEventListener('DOMContentLoaded', App.init);
+    </script>
+</body>
+</html>
